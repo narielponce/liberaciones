@@ -1,0 +1,67 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: liberaciones_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres_password_prod_2026}
+      POSTGRES_DB: ${POSTGRES_DB:-liberaciones_db}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-liberaciones_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - default
+
+  backend:
+    image: ghcr.io/${GITHUB_REPOSITORY_OWNER:-narielponce}/liberaciones-backend:latest
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: liberaciones_backend
+    restart: always
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres_password_prod_2026}@db:5432/${POSTGRES_DB:-liberaciones_db}
+      - SECRET_KEY=${SECRET_KEY:-prod_super_secret_jwt_key_industrial_liberaciones_2026}
+      - ALGORITHM=${ALGORITHM:-HS256}
+      - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES:-480}
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - default
+
+  frontend:
+    image: ghcr.io/${GITHUB_REPOSITORY_OWNER:-narielponce}/liberaciones-frontend:latest
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: production
+    container_name: liberaciones_frontend
+    restart: always
+    environment:
+      - VITE_API_BASE_URL=/api/v1
+    depends_on:
+      - backend
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.liberaciones.rule=Host(`liberaciones.raizdigital.com.ar`)"
+      - "traefik.http.routers.liberaciones.entrypoints=websecure"
+      - "traefik.http.routers.liberaciones.tls=true"
+      - "traefik.http.routers.liberaciones.tls.certresolver=letsencrypt"
+      - "traefik.http.services.liberaciones.loadbalancer.server.port=80"
+      - "traefik.docker.network=traefik-network"
+    networks:
+      - default
+      - traefik-network
+
+volumes:
+  postgres_data:
+
+networks:
+  traefik-network:
+    external: true

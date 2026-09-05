@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* Custom Plant UX Utilities */
+.btn-touch {
+  @apply min-h-[52px] active:scale-[0.98] transition-all duration-150 rounded-xl font-semibold flex items-center justify-center select-none shadow-sm;
+}
+
+/* Animated warning pulsing glow for out-of-range inputs */
+@keyframes pulse-warning {
+  0%, 100% {
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(239, 68, 68, 0.7);
+  }
+}
+
+.out-of-range-pulse {
+  animation: pulse-warning 1.8s infinite;
+}
