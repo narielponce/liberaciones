@@ -1,6 +1,6 @@
 # Multi-stage Dockerfile for Vue 3 Vite Frontend
 
-# Stage 1: Development / Build
+# Stage 1: Build
 FROM node:20-alpine as build
 
 WORKDIR /app
@@ -9,6 +9,11 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
+
+# Pass production API URL argument during build
+ARG VITE_API_BASE_URL=/api/v1
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+
 RUN npm run build
 
 # Stage 2: Production with Nginx
