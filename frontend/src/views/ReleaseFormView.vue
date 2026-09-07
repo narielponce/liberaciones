@@ -55,11 +55,8 @@
       <!-- Step Progress Header -->
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-2">
         <div class="flex items-center justify-between text-xs font-bold">
-          <span class="text-slate-400 uppercase tracking-wider">
-            Paso {{ currentStep }} de {{ totalSteps }}
-          </span>
-          <span class="text-sky-400">
-            Parámetro {{ currentStep }} de {{ machine.parameters.length }}
+          <span class="text-sky-400 uppercase tracking-wider">
+            Medición {{ currentStep }} de {{ totalSteps }}
           </span>
         </div>
 
@@ -72,7 +69,7 @@
         </div>
       </div>
 
-      <!-- Step Checklist Parameters (2 per page max) -->
+      <!-- Step Checklist Parameters (1 per page) -->
       <form @submit.prevent="handleSubmitRelease" class="space-y-4">
         <div class="space-y-4">
           <div
@@ -84,9 +81,6 @@
             <!-- Parameter Label Header -->
             <div class="flex items-start justify-between gap-2">
               <div>
-                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
-                  Parámetro #{{ getParamIndex(param) + 1 }}
-                </span>
                 <h3 class="text-sm font-bold text-slate-100 leading-snug">{{ param.label }}</h3>
               </div>
 
@@ -145,7 +139,7 @@
             <div v-else-if="param.param_type === 'NUMERIC'" class="space-y-2 pt-1">
               <!-- Tolerance Range Guidelines -->
               <div class="flex items-center justify-between text-xs font-semibold text-slate-400 bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800/80">
-                <span>Rango Permitido:</span>
+                <span>Rango mediciones:</span>
                 <span class="text-sky-300 font-mono">
                   <template v-if="param.min_value !== null">{{ param.min_value }}</template>
                   <template v-else>-∞</template>
