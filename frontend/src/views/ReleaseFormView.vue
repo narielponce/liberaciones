@@ -59,7 +59,7 @@
             Paso {{ currentStep }} de {{ totalSteps }}
           </span>
           <span class="text-sky-400">
-            Parámetros {{ (currentStep - 1) * PAGE_SIZE + 1 }} - {{ Math.min(currentStep * PAGE_SIZE, machine.parameters.length) }} de {{ machine.parameters.length }}
+            Parámetro {{ currentStep }} de {{ machine.parameters.length }}
           </span>
         </div>
 
@@ -309,7 +309,7 @@ const loading = ref(true)
 const submitting = ref(false)
 const fetchError = ref(null)
 
-const PAGE_SIZE = 2
+const PAGE_SIZE = 1
 const currentStep = ref(1)
 
 const formValues = reactive({})
