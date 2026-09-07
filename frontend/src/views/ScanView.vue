@@ -1,17 +1,5 @@
 <template>
   <div class="max-w-md mx-auto px-4 py-6 pb-28 space-y-6">
-    <!-- Header Section -->
-    <div class="bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 rounded-2xl p-5 shadow-lg space-y-2">
-      <div class="flex items-center justify-between">
-        <span class="text-[11px] font-bold uppercase tracking-wider text-sky-400 bg-sky-500/10 border border-sky-500/20 px-2.5 py-1 rounded-full">
-          Paso 1 de 2
-        </span>
-        <span class="text-xs text-slate-400 font-medium">Inspección de Planta</span>
-      </div>
-      <h2 class="text-xl font-extrabold text-white">Identificar Máquina</h2>
-      <p class="text-xs text-slate-400">Escanee el código QR adherido al equipo o ingrese la clave única manualmente.</p>
-    </div>
-
     <!-- Error Alert -->
     <div v-if="error" class="p-4 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-300 text-xs font-semibold flex items-start gap-2.5 animate-shake">
       <span class="text-base">⚠️</span>
@@ -25,28 +13,18 @@
     <div class="space-y-4">
       <!-- Camera Scanner Toggle Card -->
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400 text-xl font-bold">
-              📷
-            </div>
-            <div>
-              <h3 class="text-sm font-bold text-white">Escanear QR con Cámara</h3>
-              <p class="text-[11px] text-slate-400">Escáner rápido para celular</p>
-            </div>
-          </div>
-          <button
-            @click="toggleCamera"
-            class="px-3.5 py-2 rounded-xl font-bold text-xs transition-colors"
-            :class="isCameraActive ? 'bg-red-500/20 text-red-300 border border-red-500/40' : 'bg-sky-600 hover:bg-sky-500 text-white'"
-          >
-            {{ isCameraActive ? 'Detener' : 'Activar Cámara' }}
-          </button>
-        </div>
+        <button
+          @click="toggleCamera"
+          class="w-full btn-touch h-14 font-extrabold text-base rounded-xl transition-all shadow-lg flex items-center justify-center gap-2.5"
+          :class="isCameraActive ? 'bg-red-500/20 text-red-300 border border-red-500/40 hover:bg-red-500/30' : 'bg-sky-600 hover:bg-sky-500 text-white shadow-sky-600/30'"
+        >
+          <span class="text-xl">📷</span>
+          <span>{{ isCameraActive ? 'Detener Cámara' : 'Escanear QR' }}</span>
+        </button>
 
-        <div v-show="isCameraActive" class="space-y-3">
+        <div v-show="isCameraActive" class="space-y-3 pt-2">
           <div id="qr-reader" class="overflow-hidden rounded-xl border border-sky-500/30 bg-slate-950"></div>
-          <p class="text-[11px] text-slate-400 text-center">Apunte con la cámara frontal o trasera al código QR de la máquina</p>
+          <p class="text-[11px] text-slate-400 text-center">Apunte con la cámara al código QR de la máquina</p>
         </div>
       </div>
 
@@ -57,7 +35,7 @@
             ⌨️
           </div>
           <div>
-            <h3 class="text-sm font-bold text-white">Código de Máquina</h3>
+            <h3 class="text-sm font-bold text-white">Ingreso manual</h3>
             <p class="text-[11px] text-slate-400">Ingreso manual de clave alfanumérica</p>
           </div>
         </div>

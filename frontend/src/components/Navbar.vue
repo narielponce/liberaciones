@@ -7,7 +7,7 @@
         </div>
         <div>
           <h1 class="text-sm font-bold text-slate-100 tracking-tight leading-none">Planta Control</h1>
-          <span class="text-[10px] uppercase font-semibold tracking-wider text-sky-400">Liberación Móvil</span>
+          <span class="text-[10px] uppercase font-semibold tracking-wider text-sky-400">Liberación de Operación</span>
         </div>
       </div>
 
