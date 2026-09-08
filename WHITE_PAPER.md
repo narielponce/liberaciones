@@ -19,12 +19,24 @@ En los entornos de manufactura moderna y plantas industriales de alta cadencia, 
 
 Históricamente, este proceso se ha gestionado a través de planillas de papel ("checklists físicos"), planillas de cálculo desconectadas o validaciones verbales. Este paradigma analógico adolece de problemas estructurales: falta de validación de tolerancias en tiempo real, imposibilidad de trazabilidad inmediata, alteración retroactiva de datos, ilegibilidad y latencia crítica entre la detección de un desvío y la acción correctiva.
 
-El **Sistema de Liberación de Planta** es una plataforma de software industrial concebida bajo principios de **Industria 4.0**, **Lean Manufacturing** y diseño **Poka-Yoke digital**. La plataforma digitaliza de punta a punta la verificación de parámetros pre-operativos de maquinaria mediante:
-1. **Identificación óptica instantánea por Código QR:** Asociación inequívoca del operario con la máquina física en piso de planta.
-2. **Asistente táctil guiado (Wizard Mobile-First):** Evaluación paso a paso (1 parámetro por vista) con botones sobredimensionados para entornos de trabajo exigentes.
-3. **Motor determinístico de validación en tiempo real:** Evaluación instantánea de tolerancias numéricas y condiciones booleanas de seguridad, dictaminando automáticamente el estado de la máquina (**OK / Aprobada** vs. **REJECTED / Rechazada**).
-4. **Registro transaccional inmutable y auditoría centralizada:** Almacenamiento atómico de cada lectura, operario firmante, marca de tiempo de turno y notas de desvío para auditorías de calidad (ISO 9001 / IATF 16949).
-5. **Arquitectura Cloud-Native resiliente:** Backend asíncrono con FastAPI y PostgreSQL, frontend reactivo con Vue 3 y despliegue automatizado mediante contenedores Docker con balanceo y cifrado TLS administrado por Traefik.
+El **Sistema de Liberación de Planta** es una plataforma de software industrial concebida bajo principios de **Industria 4.0**, **Lean Manufacturing** y diseño **Poka-Yoke digital**. La plataforma digitaliza de punta a punta la verificación de parámetros pre-operativos de maquinaria a través de tres experiencias adaptadas por rol:
+1. **Operador en Piso de Planta (Módulo de Carga):**  
+   * Identificación óptica instantánea mediante escaneo de Código QR montado en la máquina física.
+   * Asistente táctil guiado (*Wizard Mobile-First*) con evaluación secuencial (1 parámetro por vista) y botones táctiles sobredimensionados (56px) para trabajo con guantes.
+   * Motor determinístico de validación en tiempo real que contrasta lecturas numéricas continuas y condiciones booleanas de seguridad, dictaminando automáticamente el estado de la máquina (**OK / Aprobada** vs. **REJECTED / Rechazada**).
+   * Registro contextual de causas y observaciones específicas por cada parámetro fuera de tolerancia.
+2. **Supervisor de Calidad y Producción (Módulo de Historial y Auditoría):**  
+   * Consola de auditoría con tabla compacta de alta densidad informacional, optimizada para maximizar registros visibles en pantalla.
+   * Acceso instantáneo a telemetría detallada mediante botón modal con icono de inspección (`👁️`).
+   * Tablero de control con métricas operacionales (KPIs) en tiempo real: total de evaluaciones, aprobadas, rechazadas e índice de conformidad global.
+   * Motor de filtrado multidimensional por estado, máquina y operador, sumado a búsqueda en texto libre en tiempo real.
+3. **Administrador de Planta (Parametrizador Exclusivo):**  
+   * Control global del sistema y gestión integral de activos industriales (*No-Code Asset Management*).
+   * Alta, modificación y calibración de tolerancias dinámicas sin requerir cambios de software ni despliegues de código.
+   * Generación vectorial e impresión de etiquetas con código QR industrial.
+4. **Infraestructura Cloud-Native Resiliente:**  
+   * Backend asíncrono con FastAPI y PostgreSQL con integridad referencial ACID.
+   * Frontend reactivo con Vue 3 y despliegue automatizado mediante contenedores Docker con balanceo y cifrado TLS administrado por Traefik.
 
 ---
 
@@ -65,9 +77,9 @@ La solución adopta una arquitectura desacoplada Cliente-Servidor (*Headless API
 ```mermaid
 flowchart TB
     subgraph Clientes["Piso de Planta & Oficinas"]
-        M1["Terminales Móviles Rugerizados<br/>(Cámara QR / Touch)"]
-        T1["Tablets de Puesto de Trabajo"]
-        PC1["Estaciones de Supervisión & PC Admin"]
+        M1["Terminales Móviles Rugerizados<br/>(Cámara QR / Touch - Operadores)"]
+        T1["Tablets de Supervisión<br/>(Auditoría / Tabla Compacta)"]
+        PC1["Estaciones de Control & PC Admin<br/>(Parametrizador / Trazabilidad)"]
     end
 
     subgraph Perimetro["Perímetro de Red & Seguridad"]
@@ -77,15 +89,15 @@ flowchart TB
 
     subgraph InfraDocker["Infraestructura Contenerizada (Docker)"]
         subgraph FrontContainer["Contenedor Frontend (Nginx Alpine)"]
-            SPA["Vue 3 SPA + Vite + Tailwind CSS<br/>Pinia State / HTML5-QRCode Scanner"]
+            SPA["Vue 3 SPA + Vite + Tailwind CSS<br/>Pinia State / HTML5-QRCode Scanner<br/>Role Guards & Dynamic Views"]
         end
 
         subgraph BackContainer["Contenedor Backend (Python 3.11)"]
             UVICORN["Uvicorn ASGI Server"]
             FASTAPI["FastAPI 0.110 Async Engine"]
-            AUTH["JWT & RBAC Security Layer"]
+            AUTH["JWT & RBAC Security Layer (require_role)"]
             VAL_ENGINE["Deterministic Tolerance Engine"]
-            ORM["SQLAlchemy 2.0 Async ORM"]
+            ORM["SQLAlchemy 2.0 Async ORM (selectinload)"]
         end
 
         subgraph DBContainer["Contenedor Base de Datos"]
@@ -107,11 +119,11 @@ flowchart TB
 | :--- | :--- | :--- |
 | **Frontend Framework** | Vue.js 3.4 (`<script setup>` / Composition API) | Reactividad ligera, alto rendimiento en dispositivos móviles industriales de bajos recursos, arquitectura modular y tipado predictivo. |
 | **Build & Bundler** | Vite 5.2 | Hot Module Replacement (HMR) ultrarrápido, generación de bundles estáticos optimizados con compresión y *code-splitting*. |
-| **Estilos & UI** | Tailwind CSS 3.4 | Sistema de diseño táctil coherente con paleta industrial de alto contraste (*Dark Slate / Sky / Emerald / Crimson*), botones táctiles de 48px+ (*touch targets*) y estados de alerta visual activa. |
+| **Estilos & UI** | Tailwind CSS 3.4 | Sistema de diseño táctil coherente con paleta industrial de alto contraste (*Dark Slate / Sky / Emerald / Crimson*), botones táctiles de 48px+ (*touch targets*) y tablas de alta densidad. |
 | **Gestión de Estado** | Pinia 2.1 | Store centralizado y tipado para sesión de usuario, catálogo de máquinas y estado transitorio de la liberación en curso. |
 | **Lector Óptico QR** | HTML5-QRCode 2.3 | Acceso directo por API de cámara web/móvil nativa sin requerir instalación de aplicativos nativos (cero fricción de despliegue). |
 | **Backend Framework** | FastAPI 0.110 (Python 3.11+) | Rendimiento asíncrono comparable a NodeJS y Go, validación estricta de esquemas en tiempo de ejecución con Pydantic v2 y auto-documentación interactiva OpenAPI (Swagger). |
-| **Motor Asíncrono BD** | SQLAlchemy 2.0 + asyncpg | Mapeo objeto-relacional asíncrono de alto rendimiento, evitando bloqueos de I/O en concurrencia masiva de piso de planta. |
+| **Motor Asíncrono BD** | SQLAlchemy 2.0 + asyncpg | Mapeo objeto-relacional asíncrono de alto rendimiento con optimización de relaciones mediante `selectinload` para eliminar problemas de N+1. |
 | **Motor de Base de Datos** | PostgreSQL 16 Alpine | RDBMS ACID de confiabilidad industrial, soporte de tipos nativos, índices optimizados y restricciones de integridad referencial con borrado en cascada. |
 | **Seguridad & Tokens** | python-jose + bcrypt | Autenticación basada en JSON Web Tokens (JWT) con algoritmo criptográfico HS256 y hashing de contraseñas con salado computacionalmente costoso. |
 | **Enrutamiento Perimetral** | Traefik v2/v3 | Reverse proxy nativo para Docker con auto-descubrimiento de contenedores y emisión/renovación automática de certificados SSL con Let's Encrypt. |
@@ -195,7 +207,31 @@ Para permitir una segmentación intuitiva de los activos, cada equipo cuenta con
 * **Célula:** Célula productiva o línea modular (ej: *Célula Envasado A*, *Célula Soldadura 3*).
 * **Sección:** Subdivisión funcional o puesto de trabajo directo (ej: *Mecanizado de Precisión*).
 
-Esta parametrización permite a los supervisores filtrar auditorías y reportes analíticos con precisión milimétrica.
+### 4.3 Esquema de Datos Enriquecido para Auditoría (`ReleaseResponse`)
+
+Para evitar consultas redundantes y permitir que la vista de auditoría despliegue el contexto del equipo sin sobrecargar el motor de base de datos, el payload del endpoint de liberaciones integra el resumen del equipo asociado (`MachineSummary`):
+
+```python
+class MachineSummary(BaseModel):
+    id: int
+    code: str
+    name: str
+    section: str
+    plant: Optional[str] = None
+    cell: Optional[str] = None
+    sector: Optional[str] = None
+
+class ReleaseResponse(BaseModel):
+    id: int
+    machine_id: int
+    operator_id: int
+    timestamp: datetime
+    status: ReleaseStatus
+    notes: Optional[str] = None
+    values: List[ReleaseValueResponse] = []
+    operator: Optional[UserResponse] = None
+    machine: Optional[MachineSummary] = None  # Resumen inyectado vía selectinload
+```
 
 ---
 
@@ -232,7 +268,7 @@ Toda la operación (creación de la cabecera `MachineRelease` y la totalidad de 
 
 ---
 
-## 6. Ergonomía en Piso de Planta (UX Industrial y Diseño Táctil)
+## 6. Ergonomía en Piso de Planta (UX Industrial para Operadores)
 
 Las aplicaciones para entornos de manufactura deben diseñarse bajo premisas totalmente diferentes a las del software corporativo tradicional. En el piso de fábrica, los operarios manipulan dispositivos con guantes, bajo iluminación variable, ruido industrial y con premura de tiempo.
 
@@ -251,27 +287,75 @@ Las aplicaciones para entornos de manufactura deben diseñarse bajo premisas tot
 
 ---
 
-## 7. Módulo Administrativo y Parametrización Dinámica
+## 7. Módulo de Historial, Auditoría y Control de Calidad
+
+El módulo de auditoría (`/history`), concebido específicamente para supervisores e inspectores de calidad, abandona los esquemas analógicos y de tarjetas voluminosas para adoptar una **consola de datos tabular de alta densidad informacional** (*High-Density Industrial Data Table*).
+
+### 7.1 Tabla Compacta de Alta Densidad Visual
+Para optimizar el uso de pantalla en terminales de supervisión y maximizar la cantidad de registros visibles sin scroll excesivo, la tabla implementa las siguientes optimizaciones de diseño:
+* **Fecha y Hora Integradas en un Solo Renglón:**  
+  La fecha de inspección y la hora exacta se presentan en una misma línea (`DD/MM/AAAA HH:mm hs`), evitando saltos de línea innecesarios.
+* **Presentación Unificada de Máquinas:**  
+  El código QR identificador (`MACH-CNC-01`) y el nombre descriptivo del equipo se presentan en una sola línea horizontal compacta, suprimiendo párrafos redundantes de sección y ofreciendo un tooltip flotante completo al interactuar con el elemento.
+* **Operador Firmante en Línea Única:**  
+  Identificación clara del operario con tooltip de correo institucional.
+* **Insignias de Estado Optimizadas:**  
+  Distintivos de color con contraste visual inmediato (`✓ OK` en verde esmeralda y `🚨 RECHAZADO` en rojo carmesí).
+* **Resumen Métrico de Parámetros:**  
+  Indicador instantáneo que resume la cantidad de variables evaluadas y el conteo de desvíos detectados (`100% OK` o `X desvío(s)`).
+* **Acceso Rápido con Icono de Inspección:**  
+  En lugar de botones de texto anchos, cada fila incorpora un botón con icono vectorial SVG (`👁️`) que optimiza el espacio horizontal y dispara el detalle de telemetría.
+
+### 7.2 Inspección de Telemetría con Modal de Mediciones
+Al pulsar sobre el botón de detalle de cualquier fila, se despliega un modal flotante con la auditoría profunda de la liberación:
+1. **Ficha Técnica del Registro:** ID de transacción, máquina evaluada, sección, operador firmante, fecha/hora y dictamen global.
+2. **Observaciones Generales de Turno:** Registro de notas asentadas al momento de la firma.
+3. **Matriz Detallada de Parámetros:**  
+   Tabla comparativa que desglosa cada variable medida:
+   * **Nombre del Parámetro:** Descripción de la variable o ítem de checklist.
+   * **Tolerancia Nominal:** Especificación técnica esperada (ej: `25.0 a 35.0 bar`, `210.0 a 245.0 °C` o `Checklist Conforme`).
+   * **Lectura Registrada:** Valor exacto ingresado por el operario.
+   * **Conformidad:** Distintivo binario explícito (`✓ CONFORME` vs. `🚨 FUERA DE RANGO`).
+   * **Causa / Observación de la Desviación:** Si el parámetro presentó una anomalía, se expone la nota explicativa ingresada por el operario (`💬 Obs: ...`) para agilizar el diagnóstico de mantenimiento.
+
+### 7.3 Motor de Búsqueda y Filtrado Multidimensional en Tiempo Real
+La consola de auditoría incorpora un motor de búsqueda y filtrado reactivo del lado del cliente que no requiere recargas de página:
+* **Búsqueda en Texto Libre:** Filtra simultáneamente por ID de liberación (`#6`), código de máquina, nombre de equipo, sección técnica, operador responsable o texto contenido en las notas de turno.
+* **Filtro de Estado:** Segmenta entre *Todos los Estados*, *Solo Conformes (OK)* y *Solo Rechazados (REJECTED)*.
+* **Filtro de Máquina:** Menú desplegable alimentado dinámicamente con los equipos registrados en las liberaciones.
+* **Filtro de Operador:** Desplegable con los operarios con liberaciones registradas.
+* **Indicador de Coincidencias y Limpieza Rápida:** Notificación en tiempo real del número de registros filtrados y acceso en un clic a "Limpiar Filtros".
+
+### 7.4 Tablero de Métricas y KPIs Operacionales
+En la cabecera del módulo se ubica un panel métrico que calcula en tiempo real:
+* **Total de Evaluaciones:** Conteo histórico total de liberaciones.
+* **Conformes (OK):** Cantidad de arranques conformes sin desvíos.
+* **Rechazadas (NOk):** Cantidad de máquinas detenidas por violaciones de tolerancia.
+* **Tasa de Conformidad (%):** Porcentaje de calidad operativa ($(\text{OK} / \text{Total}) \times 100$).
+
+---
+
+## 8. Módulo Administrativo y Parametrización Dinámica
 
 Una de las mayores fortalezas arquitectónicas de la plataforma es que **no requiere intervención de desarrolladores de software para dar de alta nuevas máquinas o modificar parámetros de control**.
 
-### 7.1 Gestión de Equipos Sin Código (No-Code Asset Management)
+### 8.1 Gestión de Equipos Sin Código (No-Code Asset Management)
 Desde el panel de administración (`/admin/machines`), exclusivo para Administradores, los responsables de planta pueden:
 * Dar de alta, editar y deshabilitar máquinas en segundos.
 * Asignar la jerarquía de Planta, Célula, Sector y Sección.
 * Agregar, reordenar y configurar los parámetros dinámicos de cada máquina, definiendo etiquetas, tipo de dato, límites numéricos y unidades físicas.
 * Definir si el parámetro es de cumplimiento obligatorio.
 
-### 7.2 Emisión e Impresión de Códigos QR
+### 8.2 Emisión e Impresión de Códigos QR
 El sistema incorpora un generador vectorial de códigos QR en el módulo administrativo. Al hacer clic en el botón **QR** de cualquier equipo en el panel administrativo, el sistema genera el código exacto y permite su impresión directa con formato de etiqueta industrial lista para ser pegada en el chasis de la máquina en planta.
 
 ---
 
-## 8. Seguridad, Autenticación y Control de Acceso (RBAC)
+## 9. Seguridad, Autenticación y Control de Acceso (RBAC)
 
-La plataforma aplica un modelo de **Defensa en Profundidad** y estricta segregación de funciones operativas:
+La plataforma aplica un modelo de **Defensa en Profundidad** y una estricta segregación de funciones operativas (*Segregation of Duties*):
 
-### 8.1 Matriz de Control de Acceso Basado en Roles (RBAC)
+### 9.1 Matriz de Control de Acceso Basado en Roles (RBAC)
 
 | Módulo / Funcionalidad | Operador | Supervisor | Administrador |
 | :--- | :---: | :---: | :---: |
@@ -285,19 +369,28 @@ La plataforma aplica un modelo de **Defensa en Profundidad** y estricta segregac
 | **Generación e Impresión de Etiquetas QR** | ❌ | ❌ | ✅ (Exclusivo) |
 | **Baja Lógica de Equipos** | ❌ | ❌ | ✅ (Exclusivo) |
 
-### 8.2 Mecanismos de Seguridad Técnica
-* **Tokens Criptográficos JWT:** Los tokens de portador (*Bearer Tokens*) se emiten tras la autenticación exitosa contra el endpoint `/api/v1/auth/token`. Cuentan con una validez configurada de 480 minutos (8 horas), calibrada exactamente con la duración estándar de un turno productivo para no interrumpir la operativa diaria.
-* **Seguridad de Contraseñas:** Ninguna contraseña se almacena en texto claro. Se utiliza el algoritmo `bcrypt` con generación de sal aleatoria (*salted hashing*).
-* **Protección de Rutas (Navigation Guards):** El frontend intercepta cada transición de ruta en el cliente verificando la presencia del token y el rol de usuario, redirigiendo automáticamente accesos indebidos hacia la vista de escaneo o login.
-* **Validación en Backend:** De forma redundante a la UI, la API protege cada endpoint administrativo con la inyección de dependencias `require_role(UserRole.ADMIN)`.
+### 9.2 Segregación de Perfiles y Redirección Contextual
+
+* **Perfil Operador (`operador`):**  
+  Restringido exclusivamente a las tareas de inspección pre-operativa (`/scan` y `/release/:code`). No visualiza accesos al historial en la barra de navegación ni puede acceder a `/history`. Los endpoints `GET /releases` del backend deniegan el acceso devolviendo `HTTP 403 Forbidden`.
+* **Perfil Supervisor (`supervisor`):**  
+  Enfocado en auditoría y calidad (`/history`). Tras autenticarse, es redirigido automáticamente a la consola de historial. Se encuentra bloqueado de las rutas de escaneo y carga de liberaciones (`/scan`), y el backend rechaza cualquier intento de consulta de checklist o creación de liberaciones con `HTTP 403 Forbidden`.
+* **Perfil Administrador (`admin`):**  
+  Acceso irrestricto a todos los módulos y exclusividad absoluta sobre el Parametrizador de Planta (`/admin/machines`).
+
+### 9.3 Mecanismos de Seguridad Técnica
+* **Tokens Criptográficos JWT:** Los tokens de portador (*Bearer Tokens*) se emiten tras la autenticación exitosa contra el endpoint `/api/v1/auth/login`. Cuentan con una validez configurada de 480 minutos (8 horas), calibrada con la duración estándar de un turno productivo.
+* **Seguridad de Contraseñas:** Hashing irreversible con `bcrypt` y sal aleatoria.
+* **Protección de Rutas (Navigation Guards):** El router del cliente intercepta transiciones verificando el array `allowedRoles` de cada ruta, redirigiendo automáticamente accesos no autorizados a la vista designada para su perfil.
+* **Validación en Backend:** La API valida en cada petición el token JWT y evalúa la función de dependencia inyectable `require_role(...)`, asegurando que ninguna solicitud que eluda la interfaz pueda ejecutar acciones no permitidas.
 
 ---
 
-## 9. Estrategia DevOps, Despliegue e Infraestructura
+## 10. Estrategia DevOps, Despliegue e Infraestructura
 
 El sistema está concebido para ser operado bajo esquemas de alta disponibilidad y mantenimiento automatizado.
 
-### 9.1 Canal de Despliegue Continuo (CI/CD Pipeline)
+### 10.1 Canal de Despliegue Continuo (CI/CD Pipeline)
 
 ```
 [Repositorio Git]
@@ -319,7 +412,7 @@ El sistema está concebido para ser operado bajo esquemas de alta disponibilidad
        └──> docker image prune -f (Limpieza de disco)
 ```
 
-### 9.2 Infraestructura Perimetral con Traefik
+### 10.2 Infraestructura Perimetral con Traefik
 En el entorno de producción (`liberaciones.raizdigital.com.ar`), el tráfico entrante es gestionado por un contenedor **Traefik** conectado a la red externa `traefik-network`. Traefik:
 * Resuelve el handshake TLS de forma transparente.
 * Renueva automáticamente los certificados Let's Encrypt antes de su vencimiento.
@@ -327,7 +420,7 @@ En el entorno de producción (`liberaciones.raizdigital.com.ar`), el tráfico en
 
 ---
 
-## 10. Impacto Operativo y Retorno de la Inversión (ROI)
+## 11. Impacto Operativo y Retorno de la Inversión (ROI)
 
 La adopción del Sistema de Liberación de Planta produce mejoras cuantificables en los principales indicadores de manufactura (KPIs):
 
@@ -335,12 +428,12 @@ La adopción del Sistema de Liberación de Planta produce mejoras cuantificables
 | :--- | :--- | :--- | :--- |
 | **Tiempo de Auditoría y Verificación** | 15 a 20 min (búsqueda de planilla, llenado a mano) | 2 a 3 min (escaneo QR + wizard táctil) | **Reducción de hasta un 80% en tiempo de arranque** |
 | **Scrap por Parámetro Descalibrado** | Detectado tras 50-200 piezas fabricadas | Cero (máquina bloqueada en RECHAZADO) | **Reducción del 95% de scrap inicial de lote** |
-| **Disponibilidad para Auditorías ISO** | 2 a 3 días recopilando y ordenando biblioratos | Inmediata (consulta online en segundos) | **Tiempo de respuesta: tiempo real** |
+| **Disponibilidad para Auditorías ISO** | 2 a 3 días recopilando y ordenando biblioratos | Inmediata (consola tabular filtrable) | **Tiempo de respuesta: tiempo real** |
 | **Trazabilidad y No Repudio** | Firmas ilegibles, hojas dañadas con grasa | Registro digital con usuario y timestamp | **100% de integridad y trazabilidad** |
 
 ---
 
-## 11. Hoja de Ruta Tecnológica (Roadmap)
+## 12. Hoja de Ruta Tecnológica (Roadmap)
 
 La arquitectura modular de la plataforma sienta las bases para futuras fases evolutivas:
 
@@ -355,9 +448,9 @@ La arquitectura modular de la plataforma sienta las bases para futuras fases evo
 
 ---
 
-## 12. Conclusión
+## 13. Conclusión
 
-El **Sistema de Liberación de Planta** consolida la transición de la gestión de calidad analógica hacia una infraestructura industrial digital, confiable y auditable. Al combinar una interfaz táctil ultra-simplificada con un motor determinístico y una arquitectura Cloud-Native de vanguardia, la plataforma elimina el error humano en los arranques de producción, salvaguarda la integridad de los activos fabriles y asegura la excelencia operativa que exige la manufactura de clase mundial.
+El **Sistema de Liberación de Planta** consolida la transición de la gestión de calidad analógica hacia una infraestructura industrial digital, confiable y auditable. Al combinar una interfaz táctil ultra-simplificada para el operario, una consola de auditoría tabular de alta densidad para la supervisión y un motor determinístico respaldado por una arquitectura Cloud-Native, la plataforma elimina el error humano en los arranques de producción, salvaguarda la integridad de los activos fabriles y asegura la excelencia operativa que exige la manufactura de clase mundial.
 
 ---
 
