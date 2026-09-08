@@ -42,11 +42,11 @@ async def list_machines(
 async def get_machine_by_code(
     code: str,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.OPERADOR, UserRole.ADMIN)),
 ):
     """
     Retrieve machine details and parameter checklist using unique machine QR code.
-    Accessible to operators during plant inspections.
+    Accessible to operators and administrators during plant inspections.
     """
     stmt = (
         select(Machine)

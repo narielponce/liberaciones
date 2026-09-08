@@ -12,6 +12,7 @@
       class="fixed bottom-0 left-0 right-0 z-40 bg-slate-900/95 backdrop-blur-lg border-t border-slate-800 h-16 px-6 flex justify-around items-center shadow-2xl"
     >
       <router-link
+        v-if="authStore.userRole === 'operador' || authStore.userRole === 'admin'"
         to="/scan"
         class="flex flex-col items-center gap-0.5 text-slate-400 font-semibold text-[11px] transition-colors py-1 px-4 rounded-xl"
         active-class="text-sky-400 font-bold bg-sky-500/10 border border-sky-500/20"
@@ -21,6 +22,7 @@
       </router-link>
 
       <router-link
+        v-if="authStore.userRole === 'supervisor' || authStore.userRole === 'admin'"
         to="/history"
         class="flex flex-col items-center gap-0.5 text-slate-400 font-semibold text-[11px] transition-colors py-1 px-4 rounded-xl"
         active-class="text-sky-400 font-bold bg-sky-500/10 border border-sky-500/20"

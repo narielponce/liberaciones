@@ -9,7 +9,13 @@ import AdminMachinesView from '../views/AdminMachinesView.vue'
 const routes = [
   {
     path: '/',
-    redirect: '/scan',
+    name: 'home',
+    redirect: () => {
+      const authStore = useAuthStore()
+      if (!authStore.isAuthenticated) return { name: 'login' }
+      if (authStore.userRole === 'supervisor') return { name: 'history' }
+      return { name: 'scan' }
+    },
   },
   {
     path: '/login',
@@ -20,25 +26,29 @@ const routes = [
     path: '/scan',
     name: 'scan',
     component: ScanView,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, allowedRoles: ['operador', 'admin'] },
   },
   {
     path: '/release/:code',
     name: 'release-form',
     component: ReleaseFormView,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, allowedRoles: ['operador', 'admin'] },
   },
   {
     path: '/history',
     name: 'history',
     component: HistoryView,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, allowedRoles: ['supervisor', 'admin'] },
   },
   {
     path: '/admin/machines',
     name: 'admin-machines',
     component: AdminMachinesView,
-    meta: { requiresAuth: true, requiresAdmin: true },
+    meta: { requiresAuth: true, allowedRoles: ['admin'] },
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: '/',
   },
 ]
 
@@ -50,15 +60,24 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore()
 
+  // 1. Unauthenticated users trying to access protected routes
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
     return next({ name: 'login' })
   }
-  
-  if (to.meta.requiresAdmin && authStore.userRole !== 'admin') {
+
+  // 2. Authenticated users trying to access login page
+  if (to.name === 'login' && authStore.isAuthenticated) {
+    if (authStore.userRole === 'supervisor') {
+      return next({ name: 'history' })
+    }
     return next({ name: 'scan' })
   }
 
-  if (to.name === 'login' && authStore.isAuthenticated) {
+  // 3. Strict Role-based access control
+  if (to.meta.allowedRoles && !to.meta.allowedRoles.includes(authStore.userRole)) {
+    if (authStore.userRole === 'supervisor') {
+      return next({ name: 'history' })
+    }
     return next({ name: 'scan' })
   }
 

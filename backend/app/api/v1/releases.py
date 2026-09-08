@@ -115,6 +115,7 @@ async def create_machine_release(
         select(MachineRelease)
         .where(MachineRelease.id == db_release.id)
         .options(
+            selectinload(MachineRelease.machine),
             selectinload(MachineRelease.operator),
             selectinload(MachineRelease.values).selectinload(ReleaseValue.parameter),
         )
@@ -130,12 +131,13 @@ async def list_releases(
     machine_id: Optional[int] = None,
     limit: int = 50,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.SUPERVISOR, UserRole.ADMIN)),
 ):
     """
-    List historical machine releases. Accessible to supervisors, admins, and operators.
+    List historical machine releases. Restricted to supervisors and administrators.
     """
     stmt = select(MachineRelease).options(
+        selectinload(MachineRelease.machine),
         selectinload(MachineRelease.operator),
         selectinload(MachineRelease.values).selectinload(ReleaseValue.parameter),
     ).order_by(MachineRelease.timestamp.desc()).limit(limit)
@@ -152,7 +154,7 @@ async def list_releases(
 async def get_release_by_id(
     release_id: int,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(require_role(UserRole.SUPERVISOR, UserRole.ADMIN)),
 ):
     """
     Get detailed breakdown of a single release record.
@@ -161,6 +163,7 @@ async def get_release_by_id(
         select(MachineRelease)
         .where(MachineRelease.id == release_id)
         .options(
+            selectinload(MachineRelease.machine),
             selectinload(MachineRelease.operator),
             selectinload(MachineRelease.values).selectinload(ReleaseValue.parameter),
         )

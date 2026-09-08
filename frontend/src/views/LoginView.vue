@@ -89,7 +89,11 @@ const password = ref('')
 const handleSubmit = async () => {
   const success = await authStore.login(email.value, password.value)
   if (success) {
-    router.push('/scan')
+    if (authStore.userRole === 'supervisor') {
+      router.push('/history')
+    } else {
+      router.push('/scan')
+    }
   }
 }
 

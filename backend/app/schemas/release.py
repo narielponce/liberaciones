@@ -35,6 +35,18 @@ class ReleaseCreate(BaseModel):
     values: List[ReleaseValueInput]
 
 
+class MachineSummary(BaseModel):
+    id: int
+    code: str
+    name: str
+    section: str
+    plant: Optional[str] = None
+    cell: Optional[str] = None
+    sector: Optional[str] = None
+
+    model_config = ConfigDict(from_attributes=True)
+
+
 # Response returned after creating/reading a release
 class ReleaseResponse(BaseModel):
     id: int
@@ -45,5 +57,6 @@ class ReleaseResponse(BaseModel):
     notes: Optional[str] = None
     values: List[ReleaseValueResponse] = []
     operator: Optional[UserResponse] = None
+    machine: Optional[MachineSummary] = None
 
     model_config = ConfigDict(from_attributes=True)
