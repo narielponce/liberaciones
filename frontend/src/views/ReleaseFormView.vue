@@ -44,7 +44,7 @@
         >
           <div class="flex items-center gap-2">
             <span>{{ hasAnyOutOfRange ? '🚨' : '✅' }}</span>
-            <span class="text-[11px]">{{ hasAnyOutOfRange ? 'Existen parámetros fuera de rango' : 'Parámetros Conformes' }}</span>
+            <span class="text-[11px]">{{ hasAnyOutOfRange ? 'Parámetros No Ok' : 'Parámetros Ok' }}</span>
           </div>
           <span class="px-2 py-0.5 rounded text-[9px] uppercase font-black" :class="hasAnyOutOfRange ? 'bg-red-500 text-white' : 'bg-emerald-600 text-white'">
             {{ hasAnyOutOfRange ? 'RECHAZADO' : 'APROBABLE' }}
@@ -259,10 +259,17 @@
     <div v-if="submittedResult" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
       <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-sm w-full space-y-5 text-center shadow-2xl">
         <div
-          class="w-20 h-20 mx-auto rounded-3xl flex items-center justify-center text-4xl shadow-xl"
-          :class="submittedResult.status === 'OK' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' : 'bg-red-500/20 text-red-400 border border-red-500/40'"
+          class="w-20 h-20 mx-auto rounded-full flex items-center justify-center shadow-xl transition-all"
+          :class="submittedResult.status === 'OK' ? 'bg-emerald-600 text-white border-4 border-emerald-500/40 ring-4 ring-emerald-500/20' : 'bg-red-600 text-white border-4 border-red-500/40 ring-4 ring-red-500/20'"
         >
-          {{ submittedResult.status === 'OK' ? '🎉' : '🚫' }}
+          <!-- White Checkmark Icon for OK -->
+          <svg v-if="submittedResult.status === 'OK'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-10 h-10">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+          </svg>
+          <!-- White Cross Icon for RECHAZADA -->
+          <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-10 h-10">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
         </div>
 
         <div>
