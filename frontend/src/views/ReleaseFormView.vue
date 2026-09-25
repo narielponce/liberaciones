@@ -2,16 +2,16 @@
   <div class="max-w-xl mx-auto px-4 py-6 pb-28 space-y-6">
     <!-- Loading State -->
     <div v-if="loading" class="text-center py-16 space-y-3">
-      <div class="inline-block w-10 h-10 border-4 border-sky-500 border-t-transparent rounded-full animate-spin"></div>
-      <p class="text-sm font-semibold text-slate-300">Cargando parámetros de la máquina...</p>
+      <div class="inline-block w-10 h-10 border-4 border-sky-600 border-t-transparent rounded-full animate-spin"></div>
+      <p class="text-sm font-semibold text-slate-600">Cargando parámetros de la máquina...</p>
     </div>
 
     <!-- Error State -->
-    <div v-else-if="fetchError" class="bg-red-500/10 border border-red-500/30 rounded-2xl p-6 text-center space-y-4">
+    <div v-else-if="fetchError" class="bg-red-50 border border-red-200 rounded-2xl p-6 text-center space-y-4 shadow-sm">
       <span class="text-3xl">⚠️</span>
-      <h3 class="text-lg font-bold text-red-200">Error de Carga</h3>
-      <p class="text-xs text-red-300">{{ fetchError }}</p>
-      <button @click="router.push('/scan')" class="btn-touch px-6 bg-slate-800 text-white text-sm font-semibold">
+      <h3 class="text-lg font-black text-red-900">Error de Carga</h3>
+      <p class="text-xs text-red-700 font-medium">{{ fetchError }}</p>
+      <button @click="router.push('/scan')" class="btn-touch px-6 bg-slate-800 hover:bg-slate-900 text-white text-sm font-bold shadow-sm">
         Volver a Escanear
       </button>
     </div>
@@ -19,51 +19,54 @@
     <!-- Main Dynamic Form Wizard -->
     <div v-else-if="machine" class="space-y-5">
       <!-- Machine Header Card -->
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg space-y-3">
+      <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm space-y-3">
         <div class="flex items-center justify-between">
           <button
             @click="router.push('/scan')"
-            class="text-xs text-slate-400 hover:text-white flex items-center gap-1 font-semibold"
+            class="text-xs text-slate-500 hover:text-slate-900 flex items-center gap-1 font-bold transition-colors"
           >
             ← Cambiar Máquina
           </button>
-          <span class="text-[10px] font-extrabold uppercase tracking-widest text-sky-400 bg-sky-500/10 border border-sky-500/20 px-2.5 py-0.5 rounded-md">
+          <span class="text-[10px] font-mono font-extrabold uppercase tracking-widest text-sky-800 bg-sky-50 border border-sky-200 px-2.5 py-0.5 rounded-md">
             {{ machine.code }}
           </span>
         </div>
 
         <div>
-          <h2 class="text-lg font-black text-white tracking-tight">{{ machine.name }}</h2>
-          <p class="text-xs text-slate-400 font-medium">Sección: <span class="text-slate-200 font-semibold">{{ machine.section }}</span></p>
+          <h2 class="text-lg font-black text-slate-900 tracking-tight">{{ machine.name }}</h2>
+          <p class="text-xs text-slate-500 font-medium">Sección: <span class="text-slate-800 font-bold">{{ machine.section }}</span></p>
         </div>
 
         <!-- Global Tolerance Real-Time Status Banner -->
         <div
           class="p-2.5 rounded-xl flex items-center justify-between text-xs font-bold transition-all"
-          :class="hasAnyOutOfRange ? 'bg-red-500/15 border border-red-500/40 text-red-300' : 'bg-emerald-500/15 border border-emerald-500/40 text-emerald-300'"
+          :class="hasAnyOutOfRange ? 'bg-red-50 border border-red-200 text-red-800' : 'bg-emerald-50 border border-emerald-200 text-emerald-800'"
         >
           <div class="flex items-center gap-2">
             <span>{{ hasAnyOutOfRange ? '🚨' : '✅' }}</span>
-            <span class="text-[11px]">{{ hasAnyOutOfRange ? 'Parámetros No Ok' : 'Parámetros Ok' }}</span>
+            <span class="text-[11px] font-extrabold">{{ hasAnyOutOfRange ? 'Parámetros con Desvío (NOk)' : 'Parámetros en Tolerancia (OK)' }}</span>
           </div>
-          <span class="px-2 py-0.5 rounded text-[9px] uppercase font-black" :class="hasAnyOutOfRange ? 'bg-red-500 text-white' : 'bg-emerald-600 text-white'">
+          <span class="px-2 py-0.5 rounded text-[9px] uppercase font-black" :class="hasAnyOutOfRange ? 'bg-red-600 text-white' : 'bg-emerald-600 text-white'">
             {{ hasAnyOutOfRange ? 'RECHAZADO' : 'APROBABLE' }}
           </span>
         </div>
       </div>
 
       <!-- Step Progress Header -->
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-2">
+      <div class="bg-white border border-slate-200 rounded-2xl p-4 space-y-2 shadow-sm">
         <div class="flex items-center justify-between text-xs font-bold">
-          <span class="text-sky-400 uppercase tracking-wider">
+          <span class="text-sky-800 uppercase tracking-wider font-extrabold">
             Medición {{ currentStep }} de {{ totalSteps }}
+          </span>
+          <span class="text-slate-500 font-mono text-[11px]">
+            {{ Math.round((currentStep / totalSteps) * 100) }}%
           </span>
         </div>
 
         <!-- Progress Bar Track -->
-        <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-slate-800/80">
+        <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden border border-slate-200">
           <div
-            class="bg-gradient-to-r from-sky-500 to-emerald-500 h-full transition-all duration-300 rounded-full"
+            class="bg-gradient-to-r from-sky-600 to-emerald-600 h-full transition-all duration-300 rounded-full"
             :style="{ width: `${(currentStep / totalSteps) * 100}%` }"
           ></div>
         </div>
@@ -75,20 +78,20 @@
           <div
             v-for="param in visibleParameters"
             :key="param.id"
-            class="bg-slate-900 border rounded-2xl p-4 transition-all space-y-3"
-            :class="isParamOutOfRange(param) ? 'border-red-500/60 bg-red-950/10 out-of-range-pulse' : 'border-slate-800'"
+            class="bg-white border rounded-2xl p-5 transition-all space-y-3.5 shadow-sm"
+            :class="isParamOutOfRange(param) ? 'border-red-400 bg-red-50/60 out-of-range-pulse' : 'border-slate-200'"
           >
             <!-- Parameter Label Header -->
             <div class="flex items-start justify-between gap-2">
               <div>
-                <h3 class="text-sm font-bold text-slate-100 leading-snug">{{ param.label }}</h3>
+                <h3 class="text-sm font-black text-slate-900 leading-snug">{{ param.label }}</h3>
               </div>
 
               <!-- Out-Of-Range Status Badge & Compact Note Icon -->
               <div class="flex items-center gap-1.5 shrink-0">
                 <span
                   v-if="isParamOutOfRange(param)"
-                  class="inline-block text-[10px] font-black uppercase px-2 py-0.5 rounded bg-red-600 text-white tracking-wider animate-bounce"
+                  class="inline-block text-[10px] font-black uppercase px-2 py-0.5 rounded bg-red-600 text-white tracking-wider animate-bounce shadow-xs"
                 >
                   FUERA DE RANGO
                 </span>
@@ -99,10 +102,10 @@
                   type="button"
                   @click="openNoteModal(param)"
                   title="Agregar o ver observación"
-                  class="text-[11px] font-bold px-2 py-0.5 rounded-md flex items-center gap-1 transition-all border shadow-sm"
+                  class="text-[11px] font-bold px-2 py-0.5 rounded-md flex items-center gap-1 transition-all border shadow-xs"
                   :class="formValues[param.id]?.notes
-                    ? 'bg-amber-500 text-slate-950 border-amber-400 font-extrabold shadow-amber-500/40'
-                    : 'bg-slate-800 hover:bg-slate-700 text-amber-300 border-amber-500/40'"
+                    ? 'bg-amber-500 text-white border-amber-600 font-extrabold shadow-amber-500/20'
+                    : 'bg-amber-50 hover:bg-amber-100 text-amber-900 border-amber-300'"
                 >
                   <span>💬</span>
                   <span>{{ formValues[param.id]?.notes ? 'Obs.' : '+Obs' }}</span>
@@ -117,8 +120,8 @@
                 @click="formValues[param.id].bool_value = true"
                 class="btn-touch border font-extrabold text-base transition-all"
                 :class="formValues[param.id].bool_value === true
-                  ? 'bg-emerald-600 border-emerald-500 text-white shadow-lg shadow-emerald-600/30 ring-2 ring-emerald-400/50'
-                  : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-slate-200'"
+                  ? 'bg-emerald-600 border-emerald-600 text-white shadow-md shadow-emerald-600/30 ring-2 ring-emerald-500/40'
+                  : 'bg-white border-slate-300 text-slate-600 hover:bg-slate-50 shadow-xs'"
               >
                 ✓ OK (Conforme)
               </button>
@@ -128,8 +131,8 @@
                 @click="formValues[param.id].bool_value = false"
                 class="btn-touch border font-extrabold text-base transition-all"
                 :class="formValues[param.id].bool_value === false
-                  ? 'bg-red-600 border-red-500 text-white shadow-lg shadow-red-600/30 ring-2 ring-red-400/50'
-                  : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-slate-200'"
+                  ? 'bg-red-600 border-red-600 text-white shadow-md shadow-red-600/30 ring-2 ring-red-500/40'
+                  : 'bg-white border-slate-300 text-slate-600 hover:bg-slate-50 shadow-xs'"
               >
                 ✕ NOk (Falla)
               </button>
@@ -138,9 +141,9 @@
             <!-- NUMERIC Parameter Component (Keypad input + Range guidelines) -->
             <div v-else-if="param.param_type === 'NUMERIC'" class="space-y-2 pt-1">
               <!-- Tolerance Range Guidelines -->
-              <div class="flex items-center justify-between text-xs font-semibold text-slate-400 bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800/80">
+              <div class="flex items-center justify-between text-xs font-semibold text-slate-600 bg-slate-50 px-3 py-2 rounded-lg border border-slate-200">
                 <span>Rango mediciones:</span>
-                <span class="text-sky-300 font-mono">
+                <span class="text-sky-800 font-mono font-bold">
                   <template v-if="param.min_value !== null">{{ param.min_value }}</template>
                   <template v-else>-∞</template>
                   a
@@ -158,12 +161,12 @@
                   step="any"
                   required
                   placeholder="Ingrese medición"
-                  class="w-full h-14 pl-4 pr-16 rounded-xl bg-slate-950 border font-mono font-bold text-lg outline-none transition-all"
+                  class="w-full h-14 pl-4 pr-16 rounded-xl border font-mono font-bold text-lg outline-none transition-all shadow-xs"
                   :class="isParamOutOfRange(param)
-                    ? 'border-red-500 text-red-200 focus:ring-2 focus:ring-red-500 bg-red-950/20'
-                    : 'border-slate-800 text-white focus:border-sky-500 focus:ring-1 focus:ring-sky-500'"
+                    ? 'border-red-400 text-red-900 bg-red-50/50 focus:ring-2 focus:ring-red-500'
+                    : 'border-slate-300 bg-white text-slate-900 focus:border-sky-600 focus:ring-2 focus:ring-sky-600/20'"
                 />
-                <span v-if="param.unit" class="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-bold text-slate-400">
+                <span v-if="param.unit" class="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-bold text-slate-500">
                   {{ param.unit }}
                 </span>
               </div>
@@ -178,7 +181,7 @@
             v-if="currentStep > 1"
             type="button"
             @click="prevStep"
-            class="btn-touch px-5 bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm border border-slate-700 flex items-center justify-center gap-1 shrink-0"
+            class="btn-touch px-5 bg-white hover:bg-slate-50 text-slate-700 font-bold text-sm border border-slate-300 flex items-center justify-center gap-1 shrink-0 shadow-xs transition-colors"
           >
             ← Anterior
           </button>
@@ -189,7 +192,7 @@
             type="button"
             @click="nextStep"
             :disabled="!isCurrentStepComplete"
-            class="btn-touch flex-1 bg-sky-600 hover:bg-sky-500 text-white font-extrabold text-base shadow-lg shadow-sky-600/30 transition-all disabled:opacity-40 flex items-center justify-center gap-2"
+            class="btn-touch flex-1 bg-sky-600 hover:bg-sky-700 text-white font-extrabold text-base shadow-md shadow-sky-600/20 transition-all disabled:opacity-40 flex items-center justify-center gap-2"
           >
             <span>Siguiente</span>
             <span>➔</span>
@@ -200,8 +203,8 @@
             v-if="currentStep === totalSteps"
             type="submit"
             :disabled="submitting || !isFormComplete"
-            class="btn-touch flex-1 text-white font-extrabold text-base shadow-xl transition-all disabled:opacity-40"
-            :class="hasAnyOutOfRange ? 'bg-red-600 hover:bg-red-500 shadow-red-600/30' : 'bg-emerald-600 hover:bg-emerald-500 shadow-emerald-600/30'"
+            class="btn-touch flex-1 text-white font-extrabold text-base shadow-lg transition-all disabled:opacity-40"
+            :class="hasAnyOutOfRange ? 'bg-red-600 hover:bg-red-700 shadow-red-600/25' : 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/25'"
           >
             <span v-if="submitting" class="animate-pulse">Registrando Liberación...</span>
             <span v-else>
@@ -213,26 +216,26 @@
     </div>
 
     <!-- Parameter Specific Observation Modal -->
-    <div v-if="activeNoteParam" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 max-w-sm w-full space-y-4 shadow-2xl">
-        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+    <div v-if="activeNoteParam" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="bg-white border border-slate-200 rounded-3xl p-5 max-w-sm w-full space-y-4 shadow-2xl text-slate-900">
+        <div class="flex items-center justify-between border-b border-slate-200 pb-3">
           <div class="flex items-center gap-2">
             <span class="text-xl">📝</span>
             <div>
-              <h4 class="text-sm font-bold text-white">Observación del Parámetro</h4>
-              <p class="text-[11px] text-amber-400 font-semibold truncate max-w-[200px]">{{ activeNoteParam.label }}</p>
+              <h4 class="text-sm font-black text-slate-900">Observación del Parámetro</h4>
+              <p class="text-[11px] text-amber-800 font-bold truncate max-w-[200px]">{{ activeNoteParam.label }}</p>
             </div>
           </div>
-          <button @click="closeNoteModal" class="text-slate-400 hover:text-white text-lg font-bold">✕</button>
+          <button @click="closeNoteModal" class="text-slate-400 hover:text-slate-700 text-lg font-bold">✕</button>
         </div>
 
         <div class="space-y-2">
-          <label class="text-[11px] font-bold text-slate-300 uppercase tracking-wider block">Detalle o causa de la desviación</label>
+          <label class="text-[11px] font-bold text-slate-700 uppercase tracking-wider block">Detalle o causa de la desviación</label>
           <textarea
             v-model="tempNoteText"
             rows="3"
             placeholder="Ingrese el motivo de la falla o lectura fuera de tolerancia..."
-            class="w-full p-3 rounded-xl bg-slate-950 border border-slate-800 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 text-slate-100 placeholder-slate-500 text-xs font-medium outline-none transition-all"
+            class="w-full p-3 rounded-xl bg-white border border-slate-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 text-slate-900 placeholder:text-slate-400 text-xs font-medium outline-none transition-all shadow-xs"
           ></textarea>
         </div>
 
@@ -240,14 +243,14 @@
           <button
             type="button"
             @click="closeNoteModal"
-            class="btn-touch flex-1 bg-slate-800 text-slate-300 font-bold text-xs"
+            class="btn-touch flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs border border-slate-200 transition-colors"
           >
             Cancelar
           </button>
           <button
             type="button"
             @click="saveNoteModal"
-            class="btn-touch flex-1 bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs shadow-lg shadow-amber-600/30"
+            class="btn-touch flex-1 bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs shadow-md shadow-amber-600/20 transition-all"
           >
             Guardar Observación
           </button>
@@ -256,11 +259,11 @@
     </div>
 
     <!-- Result Confirmation Modal -->
-    <div v-if="submittedResult" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-      <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-sm w-full space-y-5 text-center shadow-2xl">
+    <div v-if="submittedResult" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="bg-white border border-slate-200 rounded-3xl p-6 max-w-sm w-full space-y-5 text-center shadow-2xl">
         <div
-          class="w-20 h-20 mx-auto rounded-full flex items-center justify-center shadow-xl transition-all"
-          :class="submittedResult.status === 'OK' ? 'bg-emerald-600 text-white border-4 border-emerald-500/40 ring-4 ring-emerald-500/20' : 'bg-red-600 text-white border-4 border-red-500/40 ring-4 ring-red-500/20'"
+          class="w-20 h-20 mx-auto rounded-full flex items-center justify-center shadow-lg transition-all"
+          :class="submittedResult.status === 'OK' ? 'bg-emerald-600 text-white border-4 border-emerald-200 ring-4 ring-emerald-50' : 'bg-red-600 text-white border-4 border-red-200 ring-4 ring-red-50'"
         >
           <!-- White Checkmark Icon for OK -->
           <svg v-if="submittedResult.status === 'OK'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-10 h-10">
@@ -273,20 +276,20 @@
         </div>
 
         <div>
-          <span class="text-xs uppercase font-extrabold tracking-widest text-slate-400 block mb-1">Resultado de Inspección</span>
-          <h3 class="text-2xl font-black" :class="submittedResult.status === 'OK' ? 'text-emerald-400' : 'text-red-400'">
+          <span class="text-xs uppercase font-black tracking-widest text-slate-500 block mb-1">Resultado de Inspección</span>
+          <h3 class="text-2xl font-black" :class="submittedResult.status === 'OK' ? 'text-emerald-700' : 'text-red-700'">
             LIBERACIÓN {{ submittedResult.status === 'OK' ? 'APROBADA (OK)' : 'RECHAZADA' }}
           </h3>
-          <p class="text-xs text-slate-300 mt-2">
+          <p class="text-xs text-slate-600 mt-2 font-medium">
             La operación ha sido registrada en el sistema a las
-            <span class="font-bold text-white">{{ new Date(submittedResult.timestamp).toLocaleTimeString() }}</span>.
+            <span class="font-bold text-slate-900">{{ new Date(submittedResult.timestamp).toLocaleTimeString() }}</span>.
           </p>
         </div>
 
         <div class="pt-2">
           <button
             @click="finishAndScanNew"
-            class="w-full btn-touch bg-sky-600 hover:bg-sky-500 text-white font-bold text-base shadow-lg shadow-sky-600/30"
+            class="w-full btn-touch bg-sky-600 hover:bg-sky-700 text-white font-bold text-base shadow-md shadow-sky-600/20 transition-all"
           >
             Siguiente Liberación ➔
           </button>

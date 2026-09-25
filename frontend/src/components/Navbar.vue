@@ -1,13 +1,13 @@
 <template>
-  <header class="bg-slate-900 border-b border-slate-800 text-slate-100 sticky top-0 z-50">
+  <header class="bg-white border-b border-slate-200 text-slate-800 sticky top-0 z-50 shadow-xs">
     <div class="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
       <div class="flex items-center gap-2.5">
-        <div class="w-9 h-9 rounded-lg bg-sky-600/20 border border-sky-500/40 flex items-center justify-center text-sky-400 font-bold text-lg">
+        <div class="w-9 h-9 rounded-lg bg-sky-50 border border-sky-200 flex items-center justify-center text-sky-700 font-bold text-lg shadow-xs">
           ⚙️
         </div>
         <div>
-          <h1 class="text-sm font-bold text-slate-100 tracking-tight leading-none">Planta Control</h1>
-          <span class="text-[10px] uppercase font-semibold tracking-wider text-sky-400">Liberación de Operación</span>
+          <h1 class="text-sm font-extrabold text-slate-900 tracking-tight leading-none">Planta Control</h1>
+          <span class="text-[10px] uppercase font-bold tracking-wider text-sky-700">Liberación de Operación</span>
         </div>
       </div>
 
@@ -15,23 +15,23 @@
         <router-link
           v-if="authStore.userRole === 'admin'"
           to="/admin/machines"
-          class="px-2.5 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-bold transition-all flex items-center gap-1"
-          active-class="bg-amber-500/20 text-amber-200 border-amber-500/60"
+          class="px-2.5 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 text-xs font-bold transition-all flex items-center gap-1 shadow-xs"
+          active-class="!bg-amber-100 !text-amber-900 !border-amber-300"
         >
           <span>⚙️</span>
           <span class="hidden sm:inline">Equipos</span>
         </router-link>
 
         <div class="text-right hidden sm:block">
-          <p class="text-xs font-semibold text-slate-200">{{ authStore.user?.full_name }}</p>
-          <span class="inline-block text-[10px] px-1.5 py-0.5 rounded font-bold uppercase" :class="roleBadgeClass">
+          <p class="text-xs font-bold text-slate-800">{{ authStore.user?.full_name }}</p>
+          <span class="inline-block text-[10px] px-1.5 py-0.5 rounded font-extrabold uppercase" :class="roleBadgeClass">
             {{ authStore.userRole }}
           </span>
         </div>
 
         <button
           @click="handleLogout"
-          class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors"
+          class="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 border border-slate-200 transition-colors"
           title="Cerrar Sesión"
         >
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="w-5 h-5">
@@ -53,9 +53,9 @@ const router = useRouter()
 
 const roleBadgeClass = computed(() => {
   switch (authStore.userRole) {
-    case 'admin': return 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
-    case 'supervisor': return 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
-    default: return 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+    case 'admin': return 'bg-amber-100 text-amber-800 border border-amber-300'
+    case 'supervisor': return 'bg-purple-100 text-purple-800 border border-purple-300'
+    default: return 'bg-emerald-100 text-emerald-800 border border-emerald-300'
   }
 })
 

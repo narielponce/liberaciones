@@ -2,7 +2,7 @@ services:
   db:
     image: postgres:16-alpine
     container_name: liberaciones_db
-    restart: always
+    restart: ${RESTART_POLICY:-no}
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres_password_123}
@@ -22,7 +22,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: liberaciones_backend
-    restart: always
+    restart: ${RESTART_POLICY:-no}
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     volumes:
       - ./backend:/app
@@ -42,7 +42,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: liberaciones_frontend
-    restart: always
+    restart: ${RESTART_POLICY:-no}
     command: npm run dev -- --host 0.0.0.0
     volumes:
       - ./frontend:/app

@@ -17,13 +17,14 @@
 /* Animated warning pulsing glow for out-of-range inputs */
 @keyframes pulse-warning {
   0%, 100% {
-    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.4);
+    box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.25);
   }
   50% {
-    box-shadow: 0 0 0 6px rgba(239, 68, 68, 0.7);
+    box-shadow: 0 0 0 6px rgba(220, 38, 38, 0.45);
   }
 }
 
 .out-of-range-pulse {
   animation: pulse-warning 1.8s infinite;
 }
+

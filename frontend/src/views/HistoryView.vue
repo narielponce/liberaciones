@@ -1,13 +1,13 @@
 <template>
   <div class="max-w-6xl mx-auto px-4 py-6 pb-28 space-y-6">
     <!-- Header Title & Refresh -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
       <div>
         <div class="flex items-center gap-2 mb-1">
           <span class="text-2xl">📋</span>
-          <h2 class="text-xl font-black text-white tracking-tight">Historial y Auditoría de Liberaciones</h2>
+          <h2 class="text-xl font-black text-slate-900 tracking-tight">Historial y Auditoría de Liberaciones</h2>
         </div>
-        <p class="text-xs text-slate-400 font-medium">
+        <p class="text-xs text-slate-500 font-medium">
           Módulo de Supervisión — Trazabilidad, control de calidad y registro de mediciones en piso de planta.
         </p>
       </div>
@@ -15,7 +15,7 @@
       <button
         @click="loadHistory"
         :disabled="releaseStore.loading"
-        class="btn-touch px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold rounded-xl border border-slate-700 flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
+        class="btn-touch px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl border border-slate-200 flex items-center justify-center gap-2 transition-colors disabled:opacity-50 shadow-xs"
       >
         <span :class="{ 'animate-spin': releaseStore.loading }">🔄</span>
         <span>Actualizar Datos</span>
@@ -24,29 +24,29 @@
 
     <!-- Quick Stats Cards -->
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-1">
-        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Total Evaluaciones</span>
-        <span class="text-2xl font-black text-white font-mono">{{ releaseStore.recentReleases.length }}</span>
+      <div class="bg-white border border-slate-200 rounded-xl p-4 space-y-1 shadow-sm">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Total Evaluaciones</span>
+        <span class="text-2xl font-black text-slate-900 font-mono">{{ releaseStore.recentReleases.length }}</span>
       </div>
 
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-1">
-        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Conformes (OK)</span>
-        <span class="text-2xl font-black text-emerald-400 font-mono">{{ okReleasesCount }}</span>
+      <div class="bg-white border border-slate-200 rounded-xl p-4 space-y-1 shadow-sm">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Conformes (OK)</span>
+        <span class="text-2xl font-black text-emerald-700 font-mono">{{ okReleasesCount }}</span>
       </div>
 
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-1">
-        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Rechazadas (NOk)</span>
-        <span class="text-2xl font-black text-red-400 font-mono">{{ rejectedReleasesCount }}</span>
+      <div class="bg-white border border-slate-200 rounded-xl p-4 space-y-1 shadow-sm">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Rechazadas (NOk)</span>
+        <span class="text-2xl font-black text-red-700 font-mono">{{ rejectedReleasesCount }}</span>
       </div>
 
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-1">
-        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Tasa de Conformidad</span>
-        <span class="text-2xl font-black text-sky-400 font-mono">{{ conformityRate }}%</span>
+      <div class="bg-white border border-slate-200 rounded-xl p-4 space-y-1 shadow-sm">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Tasa de Conformidad</span>
+        <span class="text-2xl font-black text-sky-800 font-mono">{{ conformityRate }}%</span>
       </div>
     </div>
 
     <!-- Filters & Search Toolbar -->
-    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-3">
+    <div class="bg-white border border-slate-200 rounded-xl p-4 space-y-3 shadow-sm">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         <!-- Search bar across basic columns -->
         <div class="relative lg:col-span-1">
@@ -54,16 +54,16 @@
             v-model="searchQuery"
             type="text"
             placeholder="Buscar por ID, máquina, operador o notas..."
-            class="w-full h-10 pl-9 pr-3 rounded-lg bg-slate-950 border border-slate-800 text-xs font-medium text-white placeholder-slate-500 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 outline-none transition-all"
+            class="w-full h-10 pl-9 pr-3 rounded-lg bg-white border border-slate-300 text-xs font-semibold text-slate-900 placeholder:text-slate-400 focus:border-sky-600 focus:ring-1 focus:ring-sky-600 outline-none transition-all shadow-2xs"
           />
-          <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm">🔍</span>
+          <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">🔍</span>
         </div>
 
         <!-- Filter by Status -->
         <div>
           <select
             v-model="statusFilter"
-            class="w-full h-10 px-3 rounded-lg bg-slate-950 border border-slate-800 text-xs font-semibold text-slate-300 focus:border-sky-500 outline-none"
+            class="w-full h-10 px-3 rounded-lg bg-white border border-slate-300 text-xs font-bold text-slate-700 focus:border-sky-600 outline-none shadow-2xs"
           >
             <option value="">Todos los Estados</option>
             <option value="OK">Solo Conformes (OK)</option>
@@ -75,7 +75,7 @@
         <div>
           <select
             v-model="machineFilter"
-            class="w-full h-10 px-3 rounded-lg bg-slate-950 border border-slate-800 text-xs font-semibold text-slate-300 focus:border-sky-500 outline-none"
+            class="w-full h-10 px-3 rounded-lg bg-white border border-slate-300 text-xs font-bold text-slate-700 focus:border-sky-600 outline-none shadow-2xs"
           >
             <option value="">Todas las Máquinas</option>
             <option v-for="m in machineOptions" :key="m.code" :value="m.code">
@@ -88,7 +88,7 @@
         <div>
           <select
             v-model="operatorFilter"
-            class="w-full h-10 px-3 rounded-lg bg-slate-950 border border-slate-800 text-xs font-semibold text-slate-300 focus:border-sky-500 outline-none"
+            class="w-full h-10 px-3 rounded-lg bg-white border border-slate-300 text-xs font-bold text-slate-700 focus:border-sky-600 outline-none shadow-2xs"
           >
             <option value="">Todos los Operadores</option>
             <option v-for="op in operatorOptions" :key="op" :value="op">
@@ -99,13 +99,13 @@
       </div>
 
       <!-- Active filters summary & Clear button -->
-      <div v-if="hasActiveFilters" class="flex items-center justify-between pt-2 border-t border-slate-800/80 text-xs">
-        <span class="text-slate-400">
-          Mostrando <strong class="text-white">{{ filteredReleases.length }}</strong> de <strong class="text-white">{{ releaseStore.recentReleases.length }}</strong> registros
+      <div v-if="hasActiveFilters" class="flex items-center justify-between pt-2 border-t border-slate-200 text-xs">
+        <span class="text-slate-500">
+          Mostrando <strong class="text-slate-900">{{ filteredReleases.length }}</strong> de <strong class="text-slate-900">{{ releaseStore.recentReleases.length }}</strong> registros
         </span>
         <button
           @click="clearFilters"
-          class="text-sky-400 hover:text-sky-300 text-xs font-semibold flex items-center gap-1 transition-colors"
+          class="text-sky-700 hover:text-sky-900 text-xs font-bold flex items-center gap-1 transition-colors"
         >
           <span>✕</span>
           <span>Limpiar Filtros</span>
@@ -115,35 +115,35 @@
 
     <!-- Loading State -->
     <div v-if="releaseStore.loading" class="text-center py-16">
-      <div class="inline-block w-9 h-9 border-4 border-sky-500 border-t-transparent rounded-full animate-spin"></div>
-      <p class="text-xs font-semibold text-slate-400 mt-2">Cargando registros de auditoría...</p>
+      <div class="inline-block w-9 h-9 border-4 border-sky-600 border-t-transparent rounded-full animate-spin"></div>
+      <p class="text-xs font-semibold text-slate-500 mt-2">Cargando registros de auditoría...</p>
     </div>
 
     <!-- Empty State -->
     <div
       v-else-if="filteredReleases.length === 0"
-      class="bg-slate-900 border border-slate-800 rounded-2xl p-12 text-center space-y-3"
+      class="bg-white border border-slate-200 rounded-2xl p-12 text-center space-y-3 shadow-sm"
     >
       <span class="text-4xl">📋</span>
-      <h3 class="text-base font-bold text-white">No se encontraron liberaciones</h3>
-      <p class="text-xs text-slate-400 max-w-sm mx-auto">
+      <h3 class="text-base font-black text-slate-900">No se encontraron liberaciones</h3>
+      <p class="text-xs text-slate-500 max-w-sm mx-auto font-medium">
         {{ releaseStore.recentReleases.length === 0 ? 'No hay liberaciones registradas en el sistema aún.' : 'No existen registros que coincidan con los filtros y búsqueda aplicados.' }}
       </p>
       <button
         v-if="hasActiveFilters"
         @click="clearFilters"
-        class="btn-touch px-4 py-2 bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold rounded-xl"
+        class="btn-touch px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold rounded-xl shadow-xs"
       >
         Limpiar Filtros
       </button>
     </div>
 
     <!-- Table View -->
-    <div v-else class="bg-slate-900 border border-slate-800 rounded-2xl shadow-xl overflow-hidden">
+    <div v-else class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
       <div class="overflow-x-auto">
         <table class="w-full text-left text-xs border-collapse">
           <thead>
-            <tr class="bg-slate-950/80 border-b border-slate-800 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+            <tr class="bg-slate-50 border-b border-slate-200 text-[11px] font-extrabold text-slate-600 uppercase tracking-wider">
               <th class="py-2.5 px-3">ID</th>
               <th class="py-2.5 px-3">Fecha y Hora</th>
               <th class="py-2.5 px-3">Equipo / Máquina</th>
@@ -153,30 +153,30 @@
               <th class="py-2.5 px-3 text-center w-12">Detalle</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-slate-800/80 font-medium">
+          <tbody class="divide-y divide-slate-200 font-medium">
             <tr
               v-for="rel in filteredReleases"
               :key="rel.id"
-              class="hover:bg-slate-800/40 transition-colors"
+              class="hover:bg-slate-50/80 transition-colors"
             >
               <!-- ID -->
-              <td class="py-2.5 px-3 font-mono font-bold text-sky-400 whitespace-nowrap">
+              <td class="py-2.5 px-3 font-mono font-black text-sky-800 whitespace-nowrap">
                 #{{ rel.id }}
               </td>
 
               <!-- Date & Time in single line -->
               <td class="py-2.5 px-3 whitespace-nowrap">
-                <span class="font-bold text-slate-200">{{ formatDate(rel.timestamp) }}</span>
-                <span class="text-[11px] text-slate-400 font-mono ml-1.5">{{ formatTime(rel.timestamp) }} hs</span>
+                <span class="font-bold text-slate-800">{{ formatDate(rel.timestamp) }}</span>
+                <span class="text-[11px] text-slate-500 font-mono ml-1.5">{{ formatTime(rel.timestamp) }} hs</span>
               </td>
 
-              <!-- Machine Information (single line, section removed) -->
+              <!-- Machine Information (single line) -->
               <td class="py-2.5 px-3 whitespace-nowrap">
                 <div class="flex items-center gap-1.5">
-                  <span class="text-[10px] font-mono font-extrabold uppercase px-1.5 py-0.5 rounded bg-sky-500/10 text-sky-300 border border-sky-500/20">
+                  <span class="text-[10px] font-mono font-extrabold uppercase px-1.5 py-0.5 rounded bg-slate-100 text-slate-800 border border-slate-300">
                     {{ rel.machine?.code || `ID ${rel.machine_id}` }}
                   </span>
-                  <span class="font-bold text-white truncate max-w-[200px]" :title="rel.machine ? `${rel.machine.name} (${rel.machine.section || ''})` : ''">
+                  <span class="font-bold text-slate-900 truncate max-w-[200px]" :title="rel.machine ? `${rel.machine.name} (${rel.machine.section || ''})` : ''">
                     {{ rel.machine?.name || 'Equipo no especificado' }}
                   </span>
                 </div>
@@ -184,7 +184,7 @@
 
               <!-- Operator (single line) -->
               <td class="py-2.5 px-3 whitespace-nowrap">
-                <span class="font-semibold text-slate-200" :title="rel.operator?.email || ''">
+                <span class="font-semibold text-slate-700" :title="rel.operator?.email || ''">
                   {{ rel.operator?.full_name || 'Desconocido' }}
                 </span>
               </td>
@@ -192,10 +192,10 @@
               <!-- Status Badge -->
               <td class="py-2.5 px-3 text-center whitespace-nowrap">
                 <span
-                  class="inline-block text-[10px] font-black uppercase px-2 py-0.5 rounded border shadow-sm"
+                  class="inline-block text-[10px] font-black uppercase px-2 py-0.5 rounded border shadow-2xs"
                   :class="rel.status === 'OK'
-                    ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-emerald-500/10'
-                    : 'bg-red-500/20 text-red-300 border-red-500/40 shadow-red-500/10'"
+                    ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                    : 'bg-red-50 text-red-800 border-red-300'"
                 >
                   {{ rel.status === 'OK' ? '✓ OK' : '🚨 RECHAZADO' }}
                 </span>
@@ -204,19 +204,19 @@
               <!-- Measurement Summary -->
               <td class="py-2.5 px-3 whitespace-nowrap">
                 <div class="flex items-center gap-1.5">
-                  <span class="font-mono text-slate-300 text-xs font-bold">
+                  <span class="font-mono text-slate-600 text-xs font-bold">
                     {{ rel.values?.length || 0 }} params
                   </span>
                   <span
                     v-if="countOutOfRange(rel) > 0"
-                    class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-red-600/30 text-red-300 border border-red-500/40"
+                    class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-red-50 text-red-800 border border-red-300"
                     title="Cantidad de parámetros fuera de rango"
                   >
                     {{ countOutOfRange(rel) }} desvío(s)
                   </span>
                   <span
                     v-else
-                    class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-600/20 text-emerald-300 border border-emerald-500/30"
+                    class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-300"
                   >
                     100% OK
                   </span>
@@ -228,7 +228,7 @@
                 <button
                   @click="openDetailsModal(rel)"
                   title="Ver detalles de mediciones"
-                  class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-sky-600/25 text-slate-300 hover:text-sky-300 border border-slate-700/80 hover:border-sky-500/50 flex items-center justify-center transition-all mx-auto shadow-sm"
+                  class="w-7 h-7 rounded-lg bg-slate-100 hover:bg-sky-50 text-slate-600 hover:text-sky-700 border border-slate-200 hover:border-sky-300 flex items-center justify-center transition-all mx-auto shadow-2xs"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
@@ -245,33 +245,33 @@
     <!-- Measurement Details Modal -->
     <div
       v-if="selectedRelease"
-      class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto"
+      class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto"
     >
       <div
-        class="bg-slate-900 border border-slate-800 rounded-3xl p-5 sm:p-6 max-w-2xl w-full my-auto space-y-5 shadow-2xl max-h-[92vh] flex flex-col"
+        class="bg-white border border-slate-200 rounded-3xl p-5 sm:p-6 max-w-2xl w-full my-auto space-y-5 shadow-2xl max-h-[92vh] flex flex-col text-slate-900"
       >
         <!-- Modal Header -->
-        <div class="flex items-center justify-between border-b border-slate-800 pb-4 shrink-0">
+        <div class="flex items-center justify-between border-b border-slate-200 pb-4 shrink-0">
           <div class="flex items-center gap-3">
             <div
               class="w-10 h-10 rounded-xl flex items-center justify-center text-lg font-bold border"
-              :class="selectedRelease.status === 'OK' ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-400' : 'bg-red-500/20 border-red-500/40 text-red-400'"
+              :class="selectedRelease.status === 'OK' ? 'bg-emerald-50 border-emerald-300 text-emerald-700' : 'bg-red-50 border-red-300 text-red-700'"
             >
               {{ selectedRelease.status === 'OK' ? '✓' : '🚨' }}
             </div>
             <div>
               <div class="flex items-center gap-2">
-                <h3 class="text-base font-black text-white">
+                <h3 class="text-base font-black text-slate-900">
                   Liberación #{{ selectedRelease.id }}
                 </h3>
                 <span
                   class="text-[10px] font-black uppercase px-2 py-0.5 rounded border"
-                  :class="selectedRelease.status === 'OK' ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' : 'bg-red-500/20 text-red-300 border-red-500/40'"
+                  :class="selectedRelease.status === 'OK' ? 'bg-emerald-50 text-emerald-800 border-emerald-300' : 'bg-red-50 text-red-800 border-red-300'"
                 >
                   {{ selectedRelease.status === 'OK' ? 'APROBADA (OK)' : 'RECHAZADA' }}
                 </span>
               </div>
-              <p class="text-[11px] text-slate-400">
+              <p class="text-[11px] text-slate-500 font-medium">
                 Registrado el {{ formatDate(selectedRelease.timestamp) }} a las {{ formatTime(selectedRelease.timestamp) }} hs
               </p>
             </div>
@@ -279,27 +279,27 @@
 
           <button
             @click="closeDetailsModal"
-            class="text-slate-400 hover:text-white text-xl font-bold p-1"
+            class="text-slate-400 hover:text-slate-700 text-xl font-bold p-1"
           >
             ✕
           </button>
         </div>
 
         <!-- Release Summary Header Card -->
-        <div class="bg-slate-950 border border-slate-800/80 rounded-2xl p-4 grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs shrink-0">
+        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs shrink-0">
           <div>
             <span class="text-[10px] text-slate-500 font-bold uppercase block">Equipo / Máquina:</span>
-            <span class="font-bold text-white truncate block">
+            <span class="font-mono font-black text-slate-900 truncate block">
               {{ selectedRelease.machine?.code || `ID ${selectedRelease.machine_id}` }}
             </span>
-            <span class="text-[11px] text-slate-300 truncate block">
+            <span class="text-[11px] text-slate-700 truncate block font-medium">
               {{ selectedRelease.machine?.name || '—' }}
             </span>
           </div>
 
           <div>
             <span class="text-[10px] text-slate-500 font-bold uppercase block">Operador Firmante:</span>
-            <span class="font-bold text-slate-200 block">
+            <span class="font-bold text-slate-900 block">
               {{ selectedRelease.operator?.full_name || 'Desconocido' }}
             </span>
             <span class="text-[10px] text-slate-500 font-mono block">
@@ -309,29 +309,29 @@
 
           <div class="col-span-2 sm:col-span-1">
             <span class="text-[10px] text-slate-500 font-bold uppercase block">Sección / Ubicación:</span>
-            <span class="text-slate-300 font-medium block">
+            <span class="text-slate-700 font-semibold block">
               {{ selectedRelease.machine?.section || 'No especificada' }}
             </span>
-            <span v-if="selectedRelease.machine?.plant" class="text-[10px] text-sky-400 block">
+            <span v-if="selectedRelease.machine?.plant" class="text-[10px] text-sky-800 font-bold block">
               Planta: {{ selectedRelease.machine.plant }}
             </span>
           </div>
         </div>
 
         <!-- General Release Notes (if any) -->
-        <div v-if="selectedRelease.notes" class="bg-slate-950 border border-slate-800/80 rounded-xl p-3 text-xs italic text-slate-300 shrink-0">
-          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block not-italic mb-0.5">Observación General de Turno:</span>
+        <div v-if="selectedRelease.notes" class="bg-amber-50/70 border border-amber-200 rounded-xl p-3 text-xs italic text-amber-900 shrink-0">
+          <span class="text-[10px] font-bold text-amber-800 uppercase tracking-wider block not-italic mb-0.5">Observación General de Turno:</span>
           "{{ selectedRelease.notes }}"
         </div>
 
         <!-- Detailed Measurements Table -->
         <div class="space-y-2 overflow-y-auto flex-1 pr-1">
           <div class="flex items-center justify-between text-xs mb-1">
-            <span class="font-bold uppercase tracking-wider text-slate-400 text-[11px]">
+            <span class="font-bold uppercase tracking-wider text-slate-500 text-[11px]">
               Detalle de Parámetros e Inspecciones ({{ selectedRelease.values?.length || 0 }})
             </span>
-            <span class="text-[11px] font-mono text-slate-400">
-              Desvíos detectados: <strong class="text-red-400">{{ countOutOfRange(selectedRelease) }}</strong>
+            <span class="text-[11px] font-mono text-slate-500">
+              Desvíos detectados: <strong class="text-red-600 font-bold">{{ countOutOfRange(selectedRelease) }}</strong>
             </span>
           </div>
 
@@ -341,28 +341,28 @@
               :key="val.id"
               class="rounded-xl border p-3.5 space-y-2 transition-all text-xs"
               :class="val.is_out_of_range
-                ? 'bg-red-950/20 border-red-500/40 text-red-200'
-                : 'bg-slate-950 border-slate-800 text-slate-200'"
+                ? 'bg-red-50/70 border-red-300 text-red-900'
+                : 'bg-white border-slate-200 text-slate-800'"
             >
               <div class="flex items-start justify-between gap-2">
                 <div class="space-y-0.5">
                   <div class="flex items-center gap-1.5">
-                    <span class="text-[10px] font-mono font-bold text-slate-500">#{{ idx + 1 }}</span>
-                    <h4 class="font-bold text-white text-sm">
+                    <span class="text-[10px] font-mono font-bold text-slate-400">#{{ idx + 1 }}</span>
+                    <h4 class="font-black text-slate-900 text-sm">
                       {{ val.parameter?.label || `Parámetro ID ${val.parameter_id}` }}
                     </h4>
                   </div>
 
                   <!-- Tolerance Specifications -->
-                  <p class="text-[11px] text-slate-400 font-medium">
-                    <span class="text-slate-500 font-semibold uppercase text-[10px]">Tolerancia:</span>
+                  <p class="text-[11px] text-slate-500 font-medium">
+                    <span class="text-slate-600 font-semibold uppercase text-[10px]">Tolerancia:</span>
                     <template v-if="val.parameter?.param_type === 'NUMERIC'">
-                      <span class="font-mono text-sky-300 ml-1">
+                      <span class="font-mono text-sky-800 font-bold ml-1">
                         {{ val.parameter.min_value !== null ? val.parameter.min_value : '-∞' }} a {{ val.parameter.max_value !== null ? val.parameter.max_value : '+∞' }} {{ val.parameter.unit || '' }}
                       </span>
                     </template>
                     <template v-else>
-                      <span class="text-emerald-400 ml-1 font-semibold">Checklist Conforme (OK)</span>
+                      <span class="text-emerald-700 ml-1 font-bold">Checklist Conforme (OK)</span>
                     </template>
                   </p>
                 </div>
@@ -372,8 +372,8 @@
                   <span
                     class="inline-block text-[10px] font-black uppercase px-2 py-0.5 rounded border"
                     :class="val.is_out_of_range
-                      ? 'bg-red-600 text-white border-red-500 font-extrabold'
-                      : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'"
+                      ? 'bg-red-600 text-white border-red-500 font-extrabold shadow-2xs'
+                      : 'bg-emerald-50 text-emerald-800 border-emerald-300'"
                   >
                     {{ val.is_out_of_range ? '🚨 FUERA DE RANGO' : '✓ CONFORME' }}
                   </span>
@@ -381,9 +381,9 @@
               </div>
 
               <!-- Measurement Value Display -->
-              <div class="flex items-center justify-between pt-1 border-t border-slate-800/60 text-xs">
-                <span class="text-slate-400 font-medium">Valor Registrado:</span>
-                <span class="font-mono font-black text-sm" :class="val.is_out_of_range ? 'text-red-300' : 'text-emerald-400'">
+              <div class="flex items-center justify-between pt-1 border-t border-slate-200 text-xs">
+                <span class="text-slate-500 font-medium">Valor Registrado:</span>
+                <span class="font-mono font-black text-sm" :class="val.is_out_of_range ? 'text-red-700' : 'text-emerald-700'">
                   <template v-if="val.bool_value !== null">
                     {{ val.bool_value ? '✓ Conforme (OK)' : '✕ No Conforme (Falla)' }}
                   </template>
@@ -399,11 +399,11 @@
               <!-- Specific Observation Note -->
               <div
                 v-if="val.notes"
-                class="bg-amber-950/30 border border-amber-500/30 rounded-lg p-2 text-xs text-amber-200/90 flex items-start gap-1.5 mt-1"
+                class="bg-amber-50 border border-amber-200 rounded-lg p-2 text-xs text-amber-900 flex items-start gap-1.5 mt-1"
               >
                 <span class="text-sm shrink-0">💬</span>
                 <div>
-                  <strong class="text-[10px] uppercase tracking-wider block text-amber-300">Observación de Desviación:</strong>
+                  <strong class="text-[10px] uppercase tracking-wider block text-amber-800">Observación de Desviación:</strong>
                   <span>{{ val.notes }}</span>
                 </div>
               </div>
@@ -412,10 +412,10 @@
         </div>
 
         <!-- Modal Footer -->
-        <div class="pt-3 border-t border-slate-800 shrink-0">
+        <div class="pt-3 border-t border-slate-200 shrink-0">
           <button
             @click="closeDetailsModal"
-            class="w-full btn-touch bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs"
+            class="w-full btn-touch bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs border border-slate-200 transition-colors"
           >
             Cerrar Detalle
           </button>

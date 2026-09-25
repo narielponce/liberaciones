@@ -2,19 +2,19 @@
   <div class="max-w-6xl mx-auto px-4 py-6 pb-28 space-y-6">
     <!-- Header Title & Action -->
     <div
-      class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
+      class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
       <div>
         <div class="flex items-center gap-2 mb-1">
           <span class="text-2xl">⚙️</span>
-          <h2 class="text-xl font-black text-white tracking-tight">Gestión de Equipos y Máquinas</h2>
+          <h2 class="text-xl font-black text-slate-900 tracking-tight">Gestión de Equipos y Máquinas</h2>
         </div>
-        <p class="text-xs text-slate-400 font-medium">
+        <p class="text-xs text-slate-500 font-medium">
           Módulo de Administración — Configure los atributos de la planta y los parámetros dinámicos de liberación.
         </p>
       </div>
 
       <button @click="openCreateModal"
-        class="btn-touch px-5 bg-sky-600 hover:bg-sky-500 text-white font-extrabold text-sm shadow-lg shadow-sky-600/30 flex items-center justify-center gap-2">
+        class="btn-touch px-5 bg-sky-600 hover:bg-sky-700 text-white font-extrabold text-sm shadow-md shadow-sky-600/20 flex items-center justify-center gap-2 transition-all">
         <span>➕</span>
         <span>Nuevo Equipo</span>
       </button>
@@ -22,43 +22,43 @@
 
     <!-- Stats Summary Cards -->
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-1">
-        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Total Equipos</span>
-        <span class="text-2xl font-black text-white font-mono">{{ machineStore.machines.length }}</span>
+      <div class="bg-white border border-slate-200 rounded-xl p-4 space-y-1 shadow-sm">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Total Equipos</span>
+        <span class="text-2xl font-black text-slate-900 font-mono">{{ machineStore.machines.length }}</span>
       </div>
 
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-1">
-        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Activos</span>
-        <span class="text-2xl font-black text-emerald-400 font-mono">{{ activeMachinesCount }}</span>
+      <div class="bg-white border border-slate-200 rounded-xl p-4 space-y-1 shadow-sm">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Activos</span>
+        <span class="text-2xl font-black text-emerald-700 font-mono">{{ activeMachinesCount }}</span>
       </div>
 
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-1">
-        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Plantas Registradas</span>
-        <span class="text-2xl font-black text-sky-400 font-mono">{{ uniquePlantsCount }}</span>
+      <div class="bg-white border border-slate-200 rounded-xl p-4 space-y-1 shadow-sm">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Plantas Registradas</span>
+        <span class="text-2xl font-black text-sky-800 font-mono">{{ uniquePlantsCount }}</span>
       </div>
 
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-1">
-        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Total Parámetros</span>
-        <span class="text-2xl font-black text-amber-400 font-mono">{{ totalParametersCount }}</span>
+      <div class="bg-white border border-slate-200 rounded-xl p-4 space-y-1 shadow-sm">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Total Parámetros</span>
+        <span class="text-2xl font-black text-amber-800 font-mono">{{ totalParametersCount }}</span>
       </div>
     </div>
 
     <!-- Search & Filter Controls -->
-    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-col sm:flex-row gap-3">
+    <div class="bg-white border border-slate-200 rounded-xl p-4 flex flex-col sm:flex-row gap-3 shadow-sm">
       <div class="relative flex-1">
         <input v-model="searchQuery" type="text" placeholder="Buscar por nombre, código QR, planta o sector..."
-          class="w-full h-10 pl-9 pr-4 rounded-lg bg-slate-950 border border-slate-800 text-xs font-medium text-white placeholder-slate-500 focus:border-sky-500 outline-none transition-all" />
-        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm">🔍</span>
+          class="w-full h-10 pl-9 pr-4 rounded-lg bg-white border border-slate-300 text-xs font-semibold text-slate-900 placeholder:text-slate-400 focus:border-sky-600 outline-none transition-all shadow-2xs" />
+        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">🔍</span>
       </div>
 
       <select v-model="plantFilter"
-        class="h-10 px-3 rounded-lg bg-slate-950 border border-slate-800 text-xs font-semibold text-slate-300 focus:border-sky-500 outline-none">
-        <option value="">Todas las Plantass</option>
+        class="h-10 px-3 rounded-lg bg-white border border-slate-300 text-xs font-bold text-slate-700 focus:border-sky-600 outline-none shadow-2xs">
+        <option value="">Todas las Plantas</option>
         <option v-for="plant in plantOptions" :key="plant" :value="plant">{{ plant }}</option>
       </select>
 
       <button @click="loadMachines"
-        class="px-4 h-10 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200 flex items-center justify-center gap-1.5 transition-colors">
+        class="px-4 h-10 rounded-lg bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-700 border border-slate-200 flex items-center justify-center gap-1.5 transition-colors shadow-2xs">
         <span>🔄</span>
         <span>Refrescar</span>
       </button>
@@ -66,68 +66,68 @@
 
     <!-- Loading State -->
     <div v-if="machineStore.loading" class="text-center py-16">
-      <div class="inline-block w-9 h-9 border-4 border-sky-500 border-t-transparent rounded-full animate-spin"></div>
-      <p class="text-xs font-semibold text-slate-400 mt-2">Cargando inventario de equipos...</p>
+      <div class="inline-block w-9 h-9 border-4 border-sky-600 border-t-transparent rounded-full animate-spin"></div>
+      <p class="text-xs font-semibold text-slate-500 mt-2">Cargando inventario de equipos...</p>
     </div>
 
     <!-- Empty State -->
     <div v-else-if="filteredMachines.length === 0"
-      class="bg-slate-900 border border-slate-800 rounded-2xl p-10 text-center space-y-3">
+      class="bg-white border border-slate-200 rounded-2xl p-10 text-center space-y-3 shadow-sm">
       <span class="text-4xl">🏗️</span>
-      <h3 class="text-base font-bold text-white">No se encontraron equipos</h3>
-      <p class="text-xs text-slate-400">Pruebe ajustando los filtros de búsqueda o registre un nuevo equipo.</p>
+      <h3 class="text-base font-black text-slate-900">No se encontraron equipos</h3>
+      <p class="text-xs text-slate-500 font-medium">Pruebe ajustando los filtros de búsqueda o registre un nuevo equipo.</p>
     </div>
 
     <!-- Machines Grid -->
     <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       <div v-for="mac in filteredMachines" :key="mac.id"
-        class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl p-5 space-y-4 shadow-md transition-all flex flex-col justify-between">
+        class="bg-white border border-slate-200 hover:border-slate-300 rounded-2xl p-5 space-y-4 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
         <div class="space-y-3">
           <!-- Card Header -->
           <div class="flex items-start justify-between gap-2">
             <div>
               <span
-                class="text-[10px] font-mono font-extrabold uppercase tracking-widest text-sky-400 bg-sky-500/10 border border-sky-500/20 px-2 py-0.5 rounded-md inline-block mb-1">
+                class="text-[10px] font-mono font-extrabold uppercase tracking-widest text-slate-800 bg-slate-100 border border-slate-300 px-2 py-0.5 rounded-md inline-block mb-1">
                 {{ mac.code }}
               </span>
-              <h3 class="text-base font-black text-white leading-tight">{{ mac.name }}</h3>
+              <h3 class="text-base font-black text-slate-900 leading-tight">{{ mac.name }}</h3>
             </div>
 
-            <span class="text-[10px] font-black uppercase px-2 py-0.5 rounded"
-              :class="mac.is_active ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-red-500/20 text-red-300 border border-red-500/30'">
+            <span class="text-[10px] font-black uppercase px-2 py-0.5 rounded border"
+              :class="mac.is_active ? 'bg-emerald-50 text-emerald-800 border-emerald-300' : 'bg-red-50 text-red-800 border-red-300'">
               {{ mac.is_active ? 'Activo' : 'Inactivo' }}
             </span>
           </div>
 
           <!-- Attributes Grid (Planta, Célula, Sector, Sección) -->
-          <div class="grid grid-cols-2 gap-2 text-xs bg-slate-950 p-3 rounded-xl border border-slate-800/80">
+          <div class="grid grid-cols-2 gap-2 text-xs bg-slate-50 p-3 rounded-xl border border-slate-200">
             <div>
               <span class="text-[10px] text-slate-500 font-bold uppercase block">Planta:</span>
-              <span class="text-slate-200 font-semibold truncate block">{{ mac.plant || '—' }}</span>
+              <span class="text-slate-800 font-semibold truncate block">{{ mac.plant || '—' }}</span>
             </div>
             <div>
               <span class="text-[10px] text-slate-500 font-bold uppercase block">Célula:</span>
-              <span class="text-slate-200 font-semibold truncate block">{{ mac.cell || '—' }}</span>
+              <span class="text-slate-800 font-semibold truncate block">{{ mac.cell || '—' }}</span>
             </div>
             <div>
               <span class="text-[10px] text-slate-500 font-bold uppercase block">Sector:</span>
-              <span class="text-slate-200 font-semibold truncate block">{{ mac.sector || '—' }}</span>
+              <span class="text-slate-800 font-semibold truncate block">{{ mac.sector || '—' }}</span>
             </div>
             <div>
               <span class="text-[10px] text-slate-500 font-bold uppercase block">Sección:</span>
-              <span class="text-slate-200 font-semibold truncate block">{{ mac.section || '—' }}</span>
+              <span class="text-slate-800 font-semibold truncate block">{{ mac.section || '—' }}</span>
             </div>
           </div>
 
           <!-- Parameters Summary -->
           <div>
             <div class="flex items-center justify-between text-xs mb-1.5">
-              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Parámetros Dinámicos:</span>
-              <span class="text-xs font-bold text-amber-400 font-mono">{{ mac.parameters?.length || 0 }} ítems</span>
+              <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Parámetros Dinámicos:</span>
+              <span class="text-xs font-bold text-amber-800 font-mono">{{ mac.parameters?.length || 0 }} ítems</span>
             </div>
             <div class="flex flex-wrap gap-1 max-h-16 overflow-y-auto">
               <span v-for="p in mac.parameters" :key="p.id"
-                class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded border border-slate-700/60">
+                class="text-[10px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded border border-slate-200 font-medium">
                 {{ p.label }}
               </span>
             </div>
@@ -135,9 +135,9 @@
         </div>
 
         <!-- Card Actions -->
-        <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between gap-2">
+        <div class="pt-3 border-t border-slate-200 flex items-center justify-between gap-2">
           <button @click="openQrModal(mac)"
-            class="px-2.5 py-1.5 rounded-lg bg-sky-500/10 hover:bg-sky-500/20 text-sky-300 border border-sky-500/30 text-xs font-bold transition-all flex items-center gap-1"
+            class="px-2.5 py-1.5 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 text-xs font-bold transition-all flex items-center gap-1 shadow-2xs"
             title="Generar e imprimir Código QR">
             <span>📷</span>
             <span>QR</span>
@@ -145,17 +145,17 @@
 
           <div class="flex items-center gap-1.5">
             <router-link :to="`/release/${mac.code}`"
-              class="px-2 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition-colors"
+              class="px-2 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 text-xs font-bold transition-colors shadow-2xs"
               title="Probar Liberación">
               📋 Probar
             </router-link>
             <button @click="openEditModal(mac)"
-              class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition-colors"
+              class="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 text-xs font-bold transition-colors shadow-2xs"
               title="Editar Equipo y Parámetros">
               ✏️ Editar
             </button>
             <button @click="confirmDelete(mac)"
-              class="p-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-300 border border-red-500/30 text-xs font-bold transition-colors"
+              class="p-2 rounded-lg bg-red-50 hover:bg-red-100 text-red-800 border border-red-200 text-xs font-bold transition-colors shadow-2xs"
               title="Eliminar Equipo">
               🗑️
             </button>
@@ -166,87 +166,87 @@
 
     <!-- Create / Edit Machine & Dynamic Parameter Modal -->
     <div v-if="showFormModal"
-      class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+      class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
       <div
-        class="bg-slate-900 border border-slate-800 rounded-3xl p-5 sm:p-6 max-w-2xl w-full my-auto space-y-5 shadow-2xl max-h-[92vh] flex flex-col">
+        class="bg-white border border-slate-200 rounded-3xl p-5 sm:p-6 max-w-2xl w-full my-auto space-y-5 shadow-2xl max-h-[92vh] flex flex-col text-slate-900">
         <!-- Modal Header -->
-        <div class="flex items-center justify-between border-b border-slate-800 pb-3 shrink-0">
+        <div class="flex items-center justify-between border-b border-slate-200 pb-3 shrink-0">
           <div class="flex items-center gap-2.5">
             <span class="text-2xl">{{ isEditing ? '✏️' : '✨' }}</span>
             <div>
-              <h3 class="text-lg font-black text-white">
+              <h3 class="text-lg font-black text-slate-900">
                 {{ isEditing ? `Editar Equipo: ${form.name}` : 'Registrar Nuevo Equipo' }}
               </h3>
-              <p class="text-xs text-slate-400">Configure los atributos generales y los parámetros de liberación</p>
+              <p class="text-xs text-slate-500 font-medium">Configure los atributos generales y los parámetros de liberación</p>
             </div>
           </div>
-          <button @click="closeFormModal" class="text-slate-400 hover:text-white text-xl font-bold">✕</button>
+          <button @click="closeFormModal" class="text-slate-400 hover:text-slate-700 text-xl font-bold">✕</button>
         </div>
 
         <!-- Form Body Scrollable -->
         <form @submit.prevent="saveMachine" class="space-y-5 overflow-y-auto pr-1 flex-1">
           <!-- Section 1: Common Machine Attributes -->
-          <div class="bg-slate-950 border border-slate-800/80 rounded-2xl p-4 space-y-4">
-            <h4 class="text-xs font-bold text-sky-400 uppercase tracking-wider">1. Atributos Comunes del Equipo</h4>
+          <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-4">
+            <h4 class="text-xs font-black text-sky-800 uppercase tracking-wider">1. Atributos Comunes del Equipo</h4>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label class="text-[11px] font-bold text-slate-300 uppercase block mb-1">Código QR Único *</label>
+                <label class="text-[11px] font-bold text-slate-700 uppercase block mb-1">Código QR Único *</label>
                 <input v-model="form.code" type="text" required placeholder="Ej: MACH-TOR-01"
-                  class="w-full h-10 px-3 rounded-xl bg-slate-900 border border-slate-800 font-mono font-bold text-xs text-white focus:border-sky-500 outline-none" />
+                  class="w-full h-10 px-3 rounded-xl bg-white border border-slate-300 font-mono font-bold text-xs text-slate-900 focus:border-sky-600 outline-none shadow-2xs" />
               </div>
 
               <div>
-                <label class="text-[11px] font-bold text-slate-300 uppercase block mb-1">Nombre del Equipo *</label>
+                <label class="text-[11px] font-bold text-slate-700 uppercase block mb-1">Nombre del Equipo *</label>
                 <input v-model="form.name" type="text" required placeholder="Ej: Torno CNC Mazak Quick Turn"
-                  class="w-full h-10 px-3 rounded-xl bg-slate-900 border border-slate-800 font-bold text-xs text-white focus:border-sky-500 outline-none" />
+                  class="w-full h-10 px-3 rounded-xl bg-white border border-slate-300 font-bold text-xs text-slate-900 focus:border-sky-600 outline-none shadow-2xs" />
               </div>
 
               <div>
-                <label class="text-[11px] font-bold text-slate-300 uppercase block mb-1">Planta Industrial</label>
+                <label class="text-[11px] font-bold text-slate-700 uppercase block mb-1">Planta Industrial</label>
                 <input v-model="form.plant" type="text" placeholder="Ej: Planta Norte"
-                  class="w-full h-10 px-3 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white focus:border-sky-500 outline-none" />
+                  class="w-full h-10 px-3 rounded-xl bg-white border border-slate-300 text-xs font-semibold text-slate-900 focus:border-sky-600 outline-none shadow-2xs" />
               </div>
 
               <div>
-                <label class="text-[11px] font-bold text-slate-300 uppercase block mb-1">Célula de Trabajo</label>
+                <label class="text-[11px] font-bold text-slate-700 uppercase block mb-1">Célula de Trabajo</label>
                 <input v-model="form.cell" type="text" placeholder="Ej: Célula Envasado A"
-                  class="w-full h-10 px-3 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white focus:border-sky-500 outline-none" />
+                  class="w-full h-10 px-3 rounded-xl bg-white border border-slate-300 text-xs font-semibold text-slate-900 focus:border-sky-600 outline-none shadow-2xs" />
               </div>
 
               <div>
-                <label class="text-[11px] font-bold text-slate-300 uppercase block mb-1">Sector Operativo</label>
+                <label class="text-[11px] font-bold text-slate-700 uppercase block mb-1">Sector Operativo</label>
                 <input v-model="form.sector" type="text" placeholder="Ej: Sector Mecanizado"
-                  class="w-full h-10 px-3 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white focus:border-sky-500 outline-none" />
+                  class="w-full h-10 px-3 rounded-xl bg-white border border-slate-300 text-xs font-semibold text-slate-900 focus:border-sky-600 outline-none shadow-2xs" />
               </div>
 
               <div>
-                <label class="text-[11px] font-bold text-slate-300 uppercase block mb-1">Sección / Ubicación *</label>
+                <label class="text-[11px] font-bold text-slate-700 uppercase block mb-1">Sección / Ubicación *</label>
                 <input v-model="form.section" type="text" required placeholder="Ej: Nave 2 / Fila B"
-                  class="w-full h-10 px-3 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white focus:border-sky-500 outline-none" />
+                  class="w-full h-10 px-3 rounded-xl bg-white border border-slate-300 text-xs font-semibold text-slate-900 focus:border-sky-600 outline-none shadow-2xs" />
               </div>
             </div>
 
             <div class="flex items-center gap-2 pt-1">
               <input id="is_active_cb" v-model="form.is_active" type="checkbox"
-                class="w-4 h-4 rounded border-slate-700 bg-slate-900 text-sky-600 focus:ring-sky-500" />
-              <label for="is_active_cb" class="text-xs font-bold text-slate-200">Equipo Activo para Inspecciones en
+                class="w-4 h-4 rounded border-slate-300 text-sky-600 focus:ring-sky-600" />
+              <label for="is_active_cb" class="text-xs font-bold text-slate-700">Equipo Activo para Inspecciones en
                 Planta</label>
             </div>
           </div>
 
           <!-- Section 2: Dynamic Inspection Parameters Builder -->
-          <div class="bg-slate-950 border border-slate-800/80 rounded-2xl p-4 space-y-4">
+          <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-4">
             <div class="flex items-center justify-between">
               <div>
-                <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider">2. Parámetros Dinámicos de
+                <h4 class="text-xs font-black text-amber-800 uppercase tracking-wider">2. Parámetros Dinámicos de
                   Liberación</h4>
-                <p class="text-[10px] text-slate-400">Defina las mediciones u homologaciones visuales requeridas para
+                <p class="text-[10px] text-slate-500 font-medium">Defina las mediciones u homologaciones visuales requeridas para
                   este equipo</p>
               </div>
 
               <button type="button" @click="addParameterRow"
-                class="px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold transition-all flex items-center gap-1">
+                class="px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 text-xs font-bold transition-all flex items-center gap-1 shadow-2xs">
                 <span>➕</span>
                 <span>Agregar Parámetro</span>
               </button>
@@ -254,19 +254,19 @@
 
             <!-- Empty Parameters Prompt -->
             <div v-if="form.parameters.length === 0"
-              class="text-center py-6 border border-dashed border-slate-800 rounded-xl">
-              <p class="text-xs font-medium text-slate-500">No ha definido parámetros aún. Presione "Agregar Parámetro".
+              class="text-center py-6 border border-dashed border-slate-300 rounded-xl bg-white">
+              <p class="text-xs font-semibold text-slate-500">No ha definido parámetros aún. Presione "Agregar Parámetro".
               </p>
             </div>
 
             <!-- Parameters Rows Builder -->
             <div v-else class="space-y-3">
               <div v-for="(p, pIdx) in form.parameters" :key="pIdx"
-                class="bg-slate-900 border border-slate-800 rounded-xl p-3 space-y-3 relative group">
-                <div class="flex items-center justify-between gap-2 border-b border-slate-800/80 pb-2">
-                  <span class="text-[10px] font-bold uppercase text-slate-400">Parámetro #{{ pIdx + 1 }}</span>
+                class="bg-white border border-slate-200 rounded-xl p-3.5 space-y-3 relative group shadow-2xs">
+                <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-2">
+                  <span class="text-[10px] font-extrabold uppercase text-slate-500">Parámetro #{{ pIdx + 1 }}</span>
                   <button type="button" @click="removeParameterRow(pIdx)"
-                    class="text-xs text-red-400 hover:text-red-300 font-bold px-2 py-0.5 rounded hover:bg-red-500/10"
+                    class="text-xs text-red-600 hover:text-red-700 font-bold px-2 py-0.5 rounded hover:bg-red-50 transition-colors"
                     title="Eliminar este parámetro">
                     🗑️ Quitar
                   </button>
@@ -274,16 +274,16 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
                   <div class="sm:col-span-2">
-                    <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Nombre / Etiqueta del
+                    <label class="text-[10px] font-bold text-slate-600 uppercase block mb-1">Nombre / Etiqueta del
                       Parámetro *</label>
                     <input v-model="p.label" type="text" required placeholder="Ej: Presión de sujeción principal"
-                      class="w-full h-9 px-3 rounded-lg bg-slate-950 border border-slate-800 text-xs font-bold text-white focus:border-sky-500 outline-none" />
+                      class="w-full h-9 px-3 rounded-lg bg-white border border-slate-300 text-xs font-bold text-slate-900 focus:border-sky-600 outline-none shadow-2xs" />
                   </div>
 
                   <div>
-                    <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Tipo de Parámetro *</label>
+                    <label class="text-[10px] font-bold text-slate-600 uppercase block mb-1">Tipo de Parámetro *</label>
                     <select v-model="p.param_type"
-                      class="w-full h-9 px-2 rounded-lg bg-slate-950 border border-slate-800 text-xs font-bold text-sky-400 focus:border-sky-500 outline-none">
+                      class="w-full h-9 px-2 rounded-lg bg-white border border-slate-300 text-xs font-bold text-sky-800 focus:border-sky-600 outline-none shadow-2xs">
                       <option value="BOOLEAN">Visual / OK-NOk</option>
                       <option value="NUMERIC">Medición Numérica</option>
                     </select>
@@ -292,23 +292,23 @@
 
                 <!-- Numeric Parameter Specific Tolerance Ranges -->
                 <div v-if="p.param_type === 'NUMERIC'"
-                  class="grid grid-cols-3 gap-2 pt-1 bg-slate-950/60 p-2.5 rounded-lg border border-slate-800/60">
+                  class="grid grid-cols-3 gap-2 pt-1 bg-slate-50 p-2.5 rounded-lg border border-slate-200">
                   <div>
-                    <label class="text-[10px] font-bold text-slate-400 uppercase block mb-0.5">Mínimo Permitido</label>
-                    <input v-model.number="p.min_value" type="number" step="any" placeholder="-∞"
-                      class="w-full h-8 px-2.5 rounded bg-slate-900 border border-slate-800 text-xs font-mono font-bold text-white outline-none" />
+                    <label class="text-[10px] font-bold text-slate-500 uppercase block mb-0.5">Mínimo Permitido</label>
+                    <input v-model.number="p.min_value" type="number" step="any" placeholder="-∞</label>"
+                      class="w-full h-8 px-2.5 rounded bg-white border border-slate-300 text-xs font-mono font-bold text-slate-900 outline-none shadow-2xs" />
                   </div>
 
                   <div>
-                    <label class="text-[10px] font-bold text-slate-400 uppercase block mb-0.5">Máximo Permitido</label>
+                    <label class="text-[10px] font-bold text-slate-500 uppercase block mb-0.5">Máximo Permitido</label>
                     <input v-model.number="p.max_value" type="number" step="any" placeholder="+∞"
-                      class="w-full h-8 px-2.5 rounded bg-slate-900 border border-slate-800 text-xs font-mono font-bold text-white outline-none" />
+                      class="w-full h-8 px-2.5 rounded bg-white border border-slate-300 text-xs font-mono font-bold text-slate-900 outline-none shadow-2xs" />
                   </div>
 
                   <div>
-                    <label class="text-[10px] font-bold text-slate-400 uppercase block mb-0.5">Unidad de Medida</label>
+                    <label class="text-[10px] font-bold text-slate-500 uppercase block mb-0.5">Unidad de Medida</label>
                     <input v-model="p.unit" type="text" placeholder="Ej: bar, °C, mm"
-                      class="w-full h-8 px-2.5 rounded bg-slate-900 border border-slate-800 text-xs font-bold text-slate-200 outline-none" />
+                      class="w-full h-8 px-2.5 rounded bg-white border border-slate-300 text-xs font-bold text-slate-800 outline-none shadow-2xs" />
                   </div>
                 </div>
               </div>
@@ -316,14 +316,14 @@
           </div>
 
           <!-- Submit Controls -->
-          <div class="flex items-center gap-3 pt-2 shrink-0 border-t border-slate-800">
+          <div class="flex items-center gap-3 pt-2 shrink-0 border-t border-slate-200">
             <button type="button" @click="closeFormModal"
-              class="btn-touch px-5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs">
+              class="btn-touch px-5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs border border-slate-200 transition-colors">
               Cancelar
             </button>
 
             <button type="submit" :disabled="saving"
-              class="btn-touch flex-1 bg-sky-600 hover:bg-sky-500 text-white font-extrabold text-sm shadow-lg shadow-sky-600/30 transition-all disabled:opacity-50">
+              class="btn-touch flex-1 bg-sky-600 hover:bg-sky-700 text-white font-extrabold text-sm shadow-md shadow-sky-600/20 transition-all disabled:opacity-50">
               <span v-if="saving" class="animate-pulse">Guardando Equipo...</span>
               <span v-else>{{ isEditing ? 'Guardar Cambios' : 'Registrar Equipo' }}</span>
             </button>
@@ -334,25 +334,25 @@
 
     <!-- Confirm Delete Modal -->
     <div v-if="deletingMachine"
-      class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+      class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
       <div
-        class="bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-sm w-full space-y-4 shadow-2xl text-center">
+        class="bg-white border border-slate-200 rounded-3xl p-6 max-w-sm w-full space-y-4 shadow-2xl text-center text-slate-900">
         <span class="text-4xl">⚠️</span>
         <div>
-          <h4 class="text-lg font-black text-white">¿Eliminar Equipo?</h4>
-          <p class="text-xs text-slate-300 mt-1">
-            Está a punto de eliminar <span class="font-bold text-white">{{ deletingMachine.name }}</span> ({{
+          <h4 class="text-lg font-black text-slate-900">¿Eliminar Equipo?</h4>
+          <p class="text-xs text-slate-600 mt-1 font-medium">
+            Está a punto de eliminar <span class="font-bold text-slate-900">{{ deletingMachine.name }}</span> ({{
               deletingMachine.code }}).
           </p>
         </div>
 
         <div class="flex items-center gap-3 pt-2">
           <button @click="deletingMachine = null"
-            class="btn-touch flex-1 bg-slate-800 text-slate-300 font-bold text-xs">
+            class="btn-touch flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs border border-slate-200 transition-colors">
             Cancelar
           </button>
           <button @click="executeDelete"
-            class="btn-touch flex-1 bg-red-600 hover:bg-red-500 text-white font-bold text-xs shadow-lg shadow-red-600/30">
+            class="btn-touch flex-1 bg-red-600 hover:bg-red-700 text-white font-bold text-xs shadow-md shadow-red-600/20 transition-all">
             Sí, Eliminar
           </button>
         </div>
@@ -361,26 +361,26 @@
 
     <!-- Printable QR Code Modal -->
     <div v-if="qrModalMachine"
-      class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+      class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
       <div
-        class="bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-sm w-full space-y-5 shadow-2xl text-center relative">
+        class="bg-white border border-slate-200 rounded-3xl p-6 max-w-sm w-full space-y-5 shadow-2xl text-center relative text-slate-900">
         <button @click="qrModalMachine = null"
-          class="absolute right-4 top-4 text-slate-400 hover:text-white text-lg font-bold">✕</button>
+          class="absolute right-4 top-4 text-slate-400 hover:text-slate-700 text-lg font-bold">✕</button>
 
         <div class="space-y-1">
           <span
-            class="text-xs font-mono font-extrabold uppercase tracking-widest text-sky-400 bg-sky-500/10 border border-sky-500/20 px-2 py-0.5 rounded-md inline-block">
+            class="text-xs font-mono font-extrabold uppercase tracking-widest text-slate-800 bg-slate-100 border border-slate-300 px-2 py-0.5 rounded-md inline-block">
             {{ qrModalMachine.code }}
           </span>
-          <h3 class="text-lg font-black text-white leading-tight">{{ qrModalMachine.name }}</h3>
-          <p class="text-[11px] text-slate-400">
+          <h3 class="text-lg font-black text-slate-900 leading-tight">{{ qrModalMachine.name }}</h3>
+          <p class="text-[11px] text-slate-500 font-medium">
             {{ [qrModalMachine.plant, qrModalMachine.cell, qrModalMachine.sector,
             qrModalMachine.section].filter(Boolean).join(' | ') }}
           </p>
         </div>
 
         <!-- QR Code Card Preview -->
-        <div class="bg-white p-5 rounded-2xl border-4 border-slate-800 inline-block shadow-inner">
+        <div class="bg-white p-5 rounded-2xl border-2 border-slate-300 inline-block shadow-inner">
           <img
             :src="`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(qrModalMachine.code)}`"
             :alt="`QR ${qrModalMachine.code}`" class="w-44 h-44 mx-auto block" />
@@ -393,20 +393,20 @@
         <div class="space-y-2 pt-1">
           <div class="grid grid-cols-2 gap-2">
             <button @click="copyToClipboard(qrModalMachine.code, 'code')"
-              class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition-all flex items-center justify-center gap-1.5">
+              class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all flex items-center justify-center gap-1.5 border border-slate-200 shadow-2xs">
               <span>📋</span>
               <span>{{ copyStatus === 'code' ? '¡Copiado!' : 'Copiar Código' }}</span>
             </button>
 
             <button @click="copyToClipboard(`${windowLocationOrigin}/release/${qrModalMachine.code}`, 'link')"
-              class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition-all flex items-center justify-center gap-1.5">
+              class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all flex items-center justify-center gap-1.5 border border-slate-200 shadow-2xs">
               <span>🔗</span>
               <span>{{ copyStatus === 'link' ? '¡Copiada!' : 'Copiar URL' }}</span>
             </button>
           </div>
 
           <button @click="printQrCard"
-            class="w-full btn-touch bg-sky-600 hover:bg-sky-500 text-white font-extrabold text-xs shadow-lg shadow-sky-600/30 flex items-center justify-center gap-2">
+            class="w-full btn-touch bg-sky-600 hover:bg-sky-700 text-white font-extrabold text-xs shadow-md shadow-sky-600/20 flex items-center justify-center gap-2 transition-all">
             <span>🖨️</span>
             <span>Imprimir Etiqueta QR</span>
           </button>
