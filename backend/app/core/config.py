@@ -33,6 +33,8 @@ class Settings(BaseSettings):
         "http://127.0.0.1:5174",
         "http://127.0.0.1:5180",
         "http://127.0.0.1:5190",
+        "https://liberaciones.raizdigital.com.ar",
+        "http://liberaciones.raizdigital.com.ar",
     ]
 
     model_config = SettingsConfigDict(
